@@ -1,5 +1,6 @@
 package com.example.erismapp.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,15 +8,83 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.erismapp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Objects;
 
 public class EmployeeFragment extends Fragment {
+
+    private View mView;
+    private FloatingActionButton fabAddEmployee;
+
+    private AlertDialog mDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_employee, container, false);
+        mView = inflater.inflate(R.layout.fragment_employee, container, false);
+
+        initViews();
+
+        eventHandling();
+
+        return mView;
+    }
+
+    private void eventHandling() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Register new employee");
+
+        View innerView = getLayoutInflater().inflate(R.layout.employee_form_dialog, null);
+        Button btnSaveEmployeeData = innerView.findViewById(R.id.btn_save_employee);
+        Button btnCancelDialog = innerView.findViewById(R.id.btn_cancel);
+
+        btnSaveEmployeeData.setOnClickListener(
+                view1 ->
+                Toast.makeText(getActivity(), "Saving data...", Toast.LENGTH_LONG).show()
+        );
+
+        btnCancelDialog.setOnClickListener(view -> {
+            mDialog.dismiss();
+            clearFields(innerView);
+        });
+
+        builder.setView(innerView);
+        mDialog = builder.create();
+        mDialog.setCancelable(false);
+
+        fabAddEmployee.setOnClickListener(view -> mDialog.show());
+
+    }
+
+    private void initViews() {
+        fabAddEmployee = mView.findViewById(R.id.fab_add_new_employee);
+    }
+
+    private void clearFields(View view) {
+
+        TextInputLayout tfFirstName = view.findViewById(R.id.tf_first_name);
+        TextInputLayout tfLastName = view.findViewById(R.id.tf_last_name);
+        TextInputLayout tfDateOfBirth = view.findViewById(R.id.tf_date_of_birth);
+        TextInputLayout tfJobTitle = view.findViewById(R.id.tf_job_title);
+        TextInputLayout tfSalary = view.findViewById(R.id.tf_salary);
+        TextInputLayout tfHireDate = view.findViewById(R.id.tf_hire_date);
+
+        Objects.requireNonNull(tfFirstName.getEditText()).setText("");
+        Objects.requireNonNull(tfLastName.getEditText()).setText("");
+        Objects.requireNonNull(tfDateOfBirth.getEditText()).setText("");
+        Objects.requireNonNull(tfJobTitle.getEditText()).setText("");
+        Objects.requireNonNull(tfSalary.getEditText()).setText("");
+        Objects.requireNonNull(tfHireDate.getEditText()).setText("");
+
+        view.clearFocus();
+
     }
 }
