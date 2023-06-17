@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_menu_employee"
+        android:icon="@drawable/ic_employee"
+        android:title="@string/nav_string_employee" />
+    <item
+        android:id="@+id/nav_menu_retirement_benefit"
+        android:icon="@drawable/ic_retirement_benefit"
+        android:title="@string/nav_string_retirement_benefit" />
+    <item
+        android:id="@+id/nav_menu_retirement_plan"
+        android:icon="@drawable/ic_plan"
+        android:title="@string/nav_string_retirement_plan" />
+    <item
+        android:id="@+id/nav_menu_payout"
+        android:icon="@drawable/ic_payouts"
+        android:title="@string/nav_string_payout" />
+
+</menu>

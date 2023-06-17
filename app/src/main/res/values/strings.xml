@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ERISM App</string>
+    <string name="nav_string_employee">Employee</string>
+    <string name="nav_string_retirement_benefit">Benefit</string>
+    <string name="nav_string_retirement_plan">Plan</string>
+    <string name="nav_string_payout">Payout</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
