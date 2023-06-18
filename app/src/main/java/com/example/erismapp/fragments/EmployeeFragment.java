@@ -2,21 +2,19 @@ package com.example.erismapp.fragments;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.erismapp.R;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -56,7 +54,7 @@ public class EmployeeFragment extends Fragment {
 
         btnSaveEmployeeData.setOnClickListener(
                 view1 ->
-                Toast.makeText(getActivity(), "Saving data...", Toast.LENGTH_LONG).show()
+                        Toast.makeText(getActivity(), "Saving data...", Toast.LENGTH_LONG).show()
         );
 
         btnCancelDialog.setOnClickListener(view -> {
@@ -70,12 +68,13 @@ public class EmployeeFragment extends Fragment {
 
         fabAddEmployee.setOnClickListener(view -> mDialog.show());
 
-        pickingDate();
+        pickDateFor(tfDateOfBirth);
+        pickDateFor(tfHireDate);
 
     }
 
-    private void pickingDate() {
-        Objects.requireNonNull(tfDateOfBirth.getEditText()).setOnClickListener(v -> {
+    private void pickDateFor(TextInputLayout mTextInput) {
+        Objects.requireNonNull(mTextInput.getEditText()).setOnClickListener(v -> {
 
             MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                     .setTitleText("Select Date")
@@ -84,23 +83,7 @@ public class EmployeeFragment extends Fragment {
 
             datePicker.addOnPositiveButtonClickListener(selection -> {
                 String date = new SimpleDateFormat("MM-dd-yyy", Locale.getDefault()).format(new Date(selection));
-                Objects.requireNonNull(tfDateOfBirth.getEditText()).setText(date);
-            });
-
-            datePicker.show(requireActivity().getSupportFragmentManager(), "tag");
-
-        });
-
-        Objects.requireNonNull(tfHireDate.getEditText()).setOnClickListener(v -> {
-
-            MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Select Date")
-                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                    .build();
-
-            datePicker.addOnPositiveButtonClickListener(selection -> {
-                String date = new SimpleDateFormat("MM-dd-yyy", Locale.getDefault()).format(new Date(selection));
-                Objects.requireNonNull(tfHireDate.getEditText()).setText(date);
+                Objects.requireNonNull(mTextInput.getEditText()).setText(date);
             });
 
             datePicker.show(requireActivity().getSupportFragmentManager(), "tag");
@@ -123,10 +106,10 @@ public class EmployeeFragment extends Fragment {
 
         Objects.requireNonNull(tfFirstName.getEditText()).setText("");
         Objects.requireNonNull(tfLastName.getEditText()).setText("");
-        Objects.requireNonNull(tfDateOfBirth.getEditText()).setText("");
+        Objects.requireNonNull(tfDateOfBirth.getEditText()).setText(R.string.string_date_format);
         Objects.requireNonNull(tfJobTitle.getEditText()).setText("");
         Objects.requireNonNull(tfSalary.getEditText()).setText("");
-        Objects.requireNonNull(tfHireDate.getEditText()).setText("");
+        Objects.requireNonNull(tfHireDate.getEditText()).setText(R.string.string_date_format);
 
         view.clearFocus();
 
