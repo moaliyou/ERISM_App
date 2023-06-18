@@ -4,8 +4,9 @@
     <string name="add_new_employee_string_FAB">Add New Employee</string>
     <string name="string_first_name">First Name</string>
     <string name="string_last_name">Last Name</string>
-    <string name="string_birth_date">Date Of Birth</string>
+    <string name="string_date_format">mm-dd-yyyy</string>
     <string name="string_job_title">Job title</string>
     <string name="string_salary">Salary</string>
     <string name="string_hire_date">Hire Date</string>
+    <string name="string_date_of_birth">Date of birth</string>
 </resources>

@@ -12,15 +12,21 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.erismapp.R;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class EmployeeFragment extends Fragment {
 
     private View mView;
     private FloatingActionButton fabAddEmployee;
+    private TextInputLayout tfDateOfBirth, tfHireDate;
 
     private AlertDialog mDialog;
 
@@ -45,6 +51,8 @@ public class EmployeeFragment extends Fragment {
         View innerView = getLayoutInflater().inflate(R.layout.employee_form_dialog, null);
         Button btnSaveEmployeeData = innerView.findViewById(R.id.btn_save_employee);
         Button btnCancelDialog = innerView.findViewById(R.id.btn_cancel);
+        tfDateOfBirth = innerView.findViewById(R.id.tf_date_of_birth);
+        tfHireDate = innerView.findViewById(R.id.tf_hire_date);
 
         btnSaveEmployeeData.setOnClickListener(
                 view1 ->
@@ -62,6 +70,42 @@ public class EmployeeFragment extends Fragment {
 
         fabAddEmployee.setOnClickListener(view -> mDialog.show());
 
+        pickingDate();
+
+    }
+
+    private void pickingDate() {
+        Objects.requireNonNull(tfDateOfBirth.getEditText()).setOnClickListener(v -> {
+
+            MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select Date")
+                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .build();
+
+            datePicker.addOnPositiveButtonClickListener(selection -> {
+                String date = new SimpleDateFormat("MM-dd-yyy", Locale.getDefault()).format(new Date(selection));
+                Objects.requireNonNull(tfDateOfBirth.getEditText()).setText(date);
+            });
+
+            datePicker.show(requireActivity().getSupportFragmentManager(), "tag");
+
+        });
+
+        Objects.requireNonNull(tfHireDate.getEditText()).setOnClickListener(v -> {
+
+            MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select Date")
+                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .build();
+
+            datePicker.addOnPositiveButtonClickListener(selection -> {
+                String date = new SimpleDateFormat("MM-dd-yyy", Locale.getDefault()).format(new Date(selection));
+                Objects.requireNonNull(tfHireDate.getEditText()).setText(date);
+            });
+
+            datePicker.show(requireActivity().getSupportFragmentManager(), "tag");
+
+        });
     }
 
     private void initViews() {
