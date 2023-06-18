@@ -147,30 +147,4 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_cancel"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:text="Cancel"
-        app:cornerRadius="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_save_employee"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tf_salary" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_save_employee"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Save Data"
-        app:cornerRadius="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/btn_cancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_cancel"
-        app:layout_constraintTop_toTopOf="@id/btn_cancel" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

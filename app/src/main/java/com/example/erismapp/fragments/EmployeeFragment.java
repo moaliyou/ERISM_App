@@ -1,11 +1,11 @@
 package com.example.erismapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -22,9 +22,10 @@ import java.util.Objects;
 
 public class EmployeeFragment extends Fragment {
 
-    private View mView;
+    private View mainView, dialogView;
     private FloatingActionButton fabAddEmployee;
-    private TextInputLayout tfDateOfBirth, tfHireDate;
+    private TextInputLayout tfFirstName, tfLastName,
+            tfJobTitle, tfSalary, tfDateOfBirth, tfHireDate;
 
     private AlertDialog mDialog;
 
@@ -32,45 +33,43 @@ public class EmployeeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_employee, container, false);
+        mainView = inflater.inflate(R.layout.fragment_employee, container, false);
 
         initViews();
 
         eventHandling();
 
-        return mView;
+        return mainView;
     }
 
     private void eventHandling() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Register new employee");
-
-        View innerView = getLayoutInflater().inflate(R.layout.employee_form_dialog, null);
-        Button btnSaveEmployeeData = innerView.findViewById(R.id.btn_save_employee);
-        Button btnCancelDialog = innerView.findViewById(R.id.btn_cancel);
-        tfDateOfBirth = innerView.findViewById(R.id.tf_date_of_birth);
-        tfHireDate = innerView.findViewById(R.id.tf_hire_date);
-
-        btnSaveEmployeeData.setOnClickListener(
-                view1 ->
-                        Toast.makeText(getActivity(), "Saving data...", Toast.LENGTH_LONG).show()
-        );
-
-        btnCancelDialog.setOnClickListener(view -> {
-            mDialog.dismiss();
-            clearFields(innerView);
-        });
-
-        builder.setView(innerView);
-        mDialog = builder.create();
-        mDialog.setCancelable(false);
+        createRegistrationDialog();
 
         fabAddEmployee.setOnClickListener(view -> mDialog.show());
 
         pickDateFor(tfDateOfBirth);
         pickDateFor(tfHireDate);
 
+    }
+
+    private void createRegistrationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Register new employee");
+
+        builder.setPositiveButton("Save", (dialogInterface, i) -> {
+            Toast.makeText(getActivity(), "Saving data...", Toast.LENGTH_LONG).show();
+            clearFields();
+        });
+
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
+            mDialog.dismiss();
+            clearFields();
+        });
+
+        builder.setView(dialogView);
+        mDialog = builder.create();
+        mDialog.setCancelable(false);
     }
 
     private void pickDateFor(TextInputLayout mTextInput) {
@@ -91,27 +90,29 @@ public class EmployeeFragment extends Fragment {
         });
     }
 
+    @SuppressLint("InflateParams")
     private void initViews() {
-        fabAddEmployee = mView.findViewById(R.id.fab_add_new_employee);
+        fabAddEmployee = mainView.findViewById(R.id.fab_add_new_employee);
+
+        dialogView = getLayoutInflater().inflate(R.layout.employee_form_dialog, null);
+        tfDateOfBirth = dialogView.findViewById(R.id.tf_date_of_birth);
+        tfHireDate = dialogView.findViewById(R.id.tf_hire_date);
+        tfFirstName = dialogView.findViewById(R.id.tf_first_name);
+        tfLastName = dialogView.findViewById(R.id.tf_last_name);
+        tfDateOfBirth = dialogView.findViewById(R.id.tf_date_of_birth);
+        tfJobTitle = dialogView.findViewById(R.id.tf_job_title);
+        tfSalary = dialogView.findViewById(R.id.tf_salary);
+        tfHireDate = dialogView.findViewById(R.id.tf_hire_date);
+
     }
 
-    private void clearFields(View view) {
-
-        TextInputLayout tfFirstName = view.findViewById(R.id.tf_first_name);
-        TextInputLayout tfLastName = view.findViewById(R.id.tf_last_name);
-        TextInputLayout tfDateOfBirth = view.findViewById(R.id.tf_date_of_birth);
-        TextInputLayout tfJobTitle = view.findViewById(R.id.tf_job_title);
-        TextInputLayout tfSalary = view.findViewById(R.id.tf_salary);
-        TextInputLayout tfHireDate = view.findViewById(R.id.tf_hire_date);
-
+    private void clearFields() {
         Objects.requireNonNull(tfFirstName.getEditText()).setText("");
         Objects.requireNonNull(tfLastName.getEditText()).setText("");
         Objects.requireNonNull(tfDateOfBirth.getEditText()).setText(R.string.string_date_format);
         Objects.requireNonNull(tfJobTitle.getEditText()).setText("");
         Objects.requireNonNull(tfSalary.getEditText()).setText("");
         Objects.requireNonNull(tfHireDate.getEditText()).setText(R.string.string_date_format);
-
-        view.clearFocus();
-
+        dialogView.clearFocus();
     }
 }
