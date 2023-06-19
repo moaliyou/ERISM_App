@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tv_employee_full_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Abdirahman Abdulkadir Mohamed"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_job_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Job title"
+                android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                app:layout_constraintStart_toStartOf="@id/tv_employee_full_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_employee_full_name" />
+
+            <TextView
+                android:id="@+id/tv_id_no"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="ID No: 1823"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                app:layout_constraintStart_toStartOf="@id/tv_job_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_job_title"
+                app:layout_constraintEnd_toStartOf="@id/tv_date_of_birth"/>
+
+            <TextView
+                android:id="@+id/tv_date_of_birth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Date of birth: 13-06-2023"
+                android:layout_marginStart="8dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                app:layout_constraintStart_toEndOf="@id/tv_id_no"
+                app:layout_constraintTop_toTopOf="@id/tv_id_no"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tv_id_no"/>
+
+            <TextView
+                android:id="@+id/tv_salary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Salary: $650"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                app:layout_constraintStart_toStartOf="@id/tv_id_no"
+                app:layout_constraintTop_toBottomOf="@id/tv_id_no"
+                app:layout_constraintEnd_toStartOf="@id/tv_hire_date"/>
+
+            <TextView
+                android:id="@+id/tv_hire_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Hire date: 07-11-2022"
+                android:layout_marginStart="8dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                app:layout_constraintStart_toEndOf="@id/tv_salary"
+                app:layout_constraintTop_toTopOf="@id/tv_salary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tv_salary"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
