@@ -9,13 +9,18 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.erismapp.R;
+import com.example.erismapp.adapters.EmployeeAdapter;
+import com.example.erismapp.models.EmployeeModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -24,11 +29,15 @@ public class EmployeeFragment extends Fragment {
 
     private View mainView, dialogView;
     private FloatingActionButton fabAddEmployee;
+    private RecyclerView employeeRecyclerView;
     private TextInputLayout tfFirstName, tfLastName,
             tfJobTitle, tfSalary, tfDateOfBirth, tfHireDate;
 
     private AlertDialog mDialog;
 
+    ArrayList<EmployeeModel> employeeArrayList;
+
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,7 +48,33 @@ public class EmployeeFragment extends Fragment {
 
         eventHandling();
 
+        employeeDataView();
+
+        employeeRecyclerView = mainView.findViewById(R.id.rv_employee_list_view);
+        employeeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        employeeRecyclerView.setHasFixedSize(true);
+        EmployeeAdapter employeeAdapter = new EmployeeAdapter(getContext(), employeeArrayList);
+        employeeRecyclerView.setAdapter(employeeAdapter);
+        employeeAdapter.notifyDataSetChanged();
+
         return mainView;
+    }
+
+    private void employeeDataView() {
+        employeeArrayList = new ArrayList<>();
+
+        employeeArrayList.add(new EmployeeModel(1292, "Abdirahman",
+                "Mohamed Ali", "Operator", 650,
+                "12-12-2020", "09-02-2017"));
+
+        employeeArrayList.add(new EmployeeModel(3432, "Ahmed",
+                "Hajji Omar", "Chief Officer", 950,
+                "12-12-1998", "03-02-2013"));
+
+        employeeArrayList.add(new EmployeeModel(1356, "Kamal",
+                "Hassan Jamal", "General Manager", 700,
+                "12-12-1987", "23-05-2009"));
+
     }
 
     private void eventHandling() {
