@@ -33,6 +33,10 @@ public class EmployeeModel {
         return firstName;
     }
 
+    public String getFullName() {
+        return String.join(" ", getFirstName(), getLastName());
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

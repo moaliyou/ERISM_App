@@ -103,6 +103,19 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 
             });
 
+            itemView.setOnLongClickListener(view -> {
+
+                if (recyclerViewInterface != null) {
+                    int position = getAdapterPosition();
+
+                    if (position != RecyclerView.NO_POSITION)
+                        recyclerViewInterface.onItemLongClick(position);
+
+                }
+
+                return true;
+            });
+
         }
     }
 

@@ -18,6 +18,7 @@ import com.example.erismapp.adapters.EmployeeAdapter;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.EmployeeModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -33,6 +34,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
     private View mainView;
     private FloatingActionButton fabAddEmployee;
     private RecyclerView employeeRecyclerView;
+    private EmployeeAdapter employeeAdapter;
     private TextInputLayout tfFirstName, tfLastName,
             tfJobTitle, tfSalary, tfDateOfBirth, tfHireDate;
 
@@ -51,7 +53,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
 
         employeeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         employeeRecyclerView.setHasFixedSize(true);
-        EmployeeAdapter employeeAdapter = new EmployeeAdapter(getContext(), employeeArrayList, this);
+        employeeAdapter = new EmployeeAdapter(getContext(), employeeArrayList, this);
         employeeRecyclerView.setAdapter(employeeAdapter);
         employeeAdapter.notifyDataSetChanged();
 
@@ -205,11 +207,28 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         });
 
 
-
     }
 
     @Override
     public void onItemClick(int position) {
         createUpdateDialog(position);
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+        new MaterialAlertDialogBuilder(requireActivity())
+                .setTitle("Delete from list?")
+                .setMessage(
+                        employeeArrayList.get(position).getFullName() +
+                                " will no longer be in the list."
+                )
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
+                .setPositiveButton("Delete", (dialogInterface, i) -> {
+                    employeeArrayList.remove(position);
+                    employeeAdapter.notifyItemRemoved(position);
+                    Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+                    dialogInterface.dismiss();
+                })
+                .show();
     }
 }
