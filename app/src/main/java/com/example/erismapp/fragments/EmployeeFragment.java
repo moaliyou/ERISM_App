@@ -229,6 +229,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
                     Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
                     dialogInterface.dismiss();
                 })
+                .setCancelable(false)
                 .show();
     }
 }

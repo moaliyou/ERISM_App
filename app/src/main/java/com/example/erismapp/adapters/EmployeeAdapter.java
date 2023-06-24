@@ -93,29 +93,28 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 
             itemView.setOnClickListener(view -> {
 
-                if (recyclerViewInterface != null) {
-                    int position = getAdapterPosition();
+                int position = getAdapterPosition();
 
-                    if (position != RecyclerView.NO_POSITION)
-                        recyclerViewInterface.onItemClick(position);
-
-                }
+                if (isRecyclerViewNull(recyclerViewInterface, position))
+                    recyclerViewInterface.onItemClick(position);
 
             });
 
             itemView.setOnLongClickListener(view -> {
 
-                if (recyclerViewInterface != null) {
-                    int position = getAdapterPosition();
+                int position = getAdapterPosition();
 
-                    if (position != RecyclerView.NO_POSITION)
-                        recyclerViewInterface.onItemLongClick(position);
-
-                }
+                if (isRecyclerViewNull(recyclerViewInterface, position))
+                    recyclerViewInterface.onItemLongClick(position);
 
                 return true;
+
             });
 
+        }
+
+        private boolean isRecyclerViewNull(RecyclerViewInterface viewInterface, int position) {
+            return (viewInterface != null && position != RecyclerView.NO_POSITION);
         }
     }
 
