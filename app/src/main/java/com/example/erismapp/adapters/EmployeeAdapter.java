@@ -11,19 +11,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.erismapp.R;
+import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.EmployeeModel;
 
 import java.util.ArrayList;
 
-public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder>{
+public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder> {
 
 
-    private Context mContext;
-    private ArrayList<EmployeeModel> employeeArrayList;
+    private final Context mContext;
+    private final ArrayList<EmployeeModel> employeeArrayList;
+    private final RecyclerViewInterface mRecyclerViewInterface;
 
-    public EmployeeAdapter(Context context, ArrayList<EmployeeModel> employeeArrayList) {
+    public EmployeeAdapter(Context context, ArrayList<EmployeeModel> employeeArrayList,
+                           RecyclerViewInterface recyclerViewInterface) {
         mContext = context;
         this.employeeArrayList = employeeArrayList;
+        this.mRecyclerViewInterface = recyclerViewInterface;
     }
 
     @NonNull
@@ -32,7 +36,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         View view = LayoutInflater
                 .from(mContext)
                 .inflate(R.layout.list_employee_layout, parent, false);
-        return new EmployeeViewHolder(view);
+        return new EmployeeViewHolder(view, mRecyclerViewInterface);
     }
 
     @SuppressLint("SetTextI18n")
@@ -43,10 +47,26 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 
         holder.tvEmployeeFullName.setText(employee.getFirstName() + " " + employee.getLastName());
         holder.tvJobTitle.setText(employee.getJobTitle());
-        holder.tvEmployeeId.setText(employee.getEmployeeId());
-        holder.tvDateOfBirth.setText(employee.getDateOfBirth());
-        holder.tvSalary.setText(String.valueOf(employee.getSalary()));
-        holder.tvHireDate.setText(employee.getHireDate());
+
+        holder.tvEmployeeId.setText(
+                mContext.getResources().getString(R.string.string_tv_id_no) + " " +
+                        employee.getEmployeeId()
+        );
+
+        holder.tvDateOfBirth.setText(
+                mContext.getResources().getString(R.string.string_tv_date_of_birth) + " " +
+                        employee.getDateOfBirth()
+        );
+
+        holder.tvSalary.setText(
+                mContext.getResources().getString(R.string.string_tv_salary) +
+                        employee.getSalary()
+        );
+
+        holder.tvHireDate.setText(
+                mContext.getResources().getString(R.string.string_tv_hire_date) + " " +
+                        employee.getHireDate()
+        );
 
     }
 
@@ -55,13 +75,13 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         return (employeeArrayList != null) ? employeeArrayList.size() : 0;
     }
 
-    public class EmployeeViewHolder extends RecyclerView.ViewHolder {
+    public static class EmployeeViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvEmployeeFullName, tvJobTitle, tvEmployeeId,
-        tvDateOfBirth, tvHireDate, tvSalary;
+                tvDateOfBirth, tvHireDate, tvSalary;
 
 
-        public EmployeeViewHolder(@NonNull View itemView) {
+        public EmployeeViewHolder(@NonNull View itemView, RecyclerViewInterface recyclerViewInterface) {
             super(itemView);
             tvEmployeeFullName = itemView.findViewById(R.id.tv_employee_full_name);
             tvJobTitle = itemView.findViewById(R.id.tv_job_title);
@@ -70,6 +90,19 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
             tvDateOfBirth = itemView.findViewById(R.id.tv_date_of_birth);
             tvHireDate = itemView.findViewById(R.id.tv_hire_date);
             tvSalary = itemView.findViewById(R.id.tv_salary);
+
+            itemView.setOnClickListener(view -> {
+
+                if (recyclerViewInterface != null) {
+                    int position = getAdapterPosition();
+
+                    if (position != RecyclerView.NO_POSITION)
+                        recyclerViewInterface.onItemClick(position);
+
+                }
+
+            });
+
         }
     }
 

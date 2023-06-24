@@ -76,4 +76,17 @@ public class EmployeeModel {
     public void setHireDate(String hireDate) {
         this.hireDate = hireDate;
     }
+
+    @Override
+    public String toString() {
+        return "EmployeeModel{" +
+                "employeeId=" + employeeId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", jobTitle='" + jobTitle + '\'' +
+                ", salary=" + salary +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", hireDate='" + hireDate + '\'' +
+                '}';
+    }
 }

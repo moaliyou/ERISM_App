@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.erismapp.R;
 import com.example.erismapp.adapters.EmployeeAdapter;
+import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.EmployeeModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,17 +27,14 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class EmployeeFragment extends Fragment {
+public class EmployeeFragment extends Fragment implements RecyclerViewInterface {
 
-    private View mainView, dialogView;
+    ArrayList<EmployeeModel> employeeArrayList;
+    private View mainView;
     private FloatingActionButton fabAddEmployee;
     private RecyclerView employeeRecyclerView;
     private TextInputLayout tfFirstName, tfLastName,
             tfJobTitle, tfSalary, tfDateOfBirth, tfHireDate;
-
-    private AlertDialog mDialog;
-
-    ArrayList<EmployeeModel> employeeArrayList;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -50,10 +49,9 @@ public class EmployeeFragment extends Fragment {
 
         employeeDataView();
 
-        employeeRecyclerView = mainView.findViewById(R.id.rv_employee_list_view);
         employeeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         employeeRecyclerView.setHasFixedSize(true);
-        EmployeeAdapter employeeAdapter = new EmployeeAdapter(getContext(), employeeArrayList);
+        EmployeeAdapter employeeAdapter = new EmployeeAdapter(getContext(), employeeArrayList, this);
         employeeRecyclerView.setAdapter(employeeAdapter);
         employeeAdapter.notifyDataSetChanged();
 
@@ -79,32 +77,49 @@ public class EmployeeFragment extends Fragment {
 
     private void eventHandling() {
 
-        createRegistrationDialog();
-
-        fabAddEmployee.setOnClickListener(view -> mDialog.show());
-
-        pickDateFor(tfDateOfBirth);
-        pickDateFor(tfHireDate);
+        fabAddEmployee.setOnClickListener(view -> {
+            createRegistrationDialog();
+            pickDateFor(tfDateOfBirth);
+            pickDateFor(tfHireDate);
+        });
 
     }
 
+    private void initDialogViews(View view) {
+        tfDateOfBirth = view.findViewById(R.id.tf_date_of_birth);
+        tfHireDate = view.findViewById(R.id.tf_hire_date);
+        tfFirstName = view.findViewById(R.id.tf_first_name);
+        tfLastName = view.findViewById(R.id.tf_last_name);
+        tfDateOfBirth = view.findViewById(R.id.tf_date_of_birth);
+        tfJobTitle = view.findViewById(R.id.tf_job_title);
+        tfSalary = view.findViewById(R.id.tf_salary);
+        tfHireDate = view.findViewById(R.id.tf_hire_date);
+    }
+
     private void createRegistrationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Register new employee");
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle("Register employee");
 
-        builder.setPositiveButton("Save", (dialogInterface, i) -> {
-            Toast.makeText(getActivity(), "Saving data...", Toast.LENGTH_LONG).show();
-            clearFields();
-        });
+        View dialogView = getLayoutInflater().inflate(R.layout.employee_form_dialog, null);
+        initDialogViews(dialogView);
 
-        builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
-            mDialog.dismiss();
-            clearFields();
-        });
+        Button buttonCancel, buttonAction;
+        buttonCancel = dialogView.findViewById(R.id.btn_cancel);
+        buttonAction = dialogView.findViewById(R.id.btn_action);
 
         builder.setView(dialogView);
-        mDialog = builder.create();
-        mDialog.setCancelable(false);
+        dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
+
+        buttonCancel.setOnClickListener(view -> dialog.dismiss());
+
+        buttonAction.setOnClickListener(view -> {
+            Toast.makeText(requireActivity(), "Saving data...", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+        });
+
     }
 
     private void pickDateFor(TextInputLayout mTextInput) {
@@ -128,26 +143,73 @@ public class EmployeeFragment extends Fragment {
     @SuppressLint("InflateParams")
     private void initViews() {
         fabAddEmployee = mainView.findViewById(R.id.fab_add_new_employee);
+        employeeRecyclerView = mainView.findViewById(R.id.rv_employee_list_view);
+    }
 
-        dialogView = getLayoutInflater().inflate(R.layout.employee_form_dialog, null);
-        tfDateOfBirth = dialogView.findViewById(R.id.tf_date_of_birth);
-        tfHireDate = dialogView.findViewById(R.id.tf_hire_date);
-        tfFirstName = dialogView.findViewById(R.id.tf_first_name);
-        tfLastName = dialogView.findViewById(R.id.tf_last_name);
-        tfDateOfBirth = dialogView.findViewById(R.id.tf_date_of_birth);
-        tfJobTitle = dialogView.findViewById(R.id.tf_job_title);
-        tfSalary = dialogView.findViewById(R.id.tf_salary);
-        tfHireDate = dialogView.findViewById(R.id.tf_hire_date);
+    private boolean isFieldsEmpty() {
+        return !(
+                Objects.requireNonNull(tfFirstName.getEditText()).getText().toString().trim().isEmpty() &&
+                        Objects.requireNonNull(tfLastName.getEditText()).getText().toString().trim().isEmpty() &&
+                        Objects.requireNonNull(tfJobTitle.getEditText()).getText().toString().trim().isEmpty() &&
+                        Objects.requireNonNull(tfDateOfBirth.getEditText()).getText().toString().trim().isEmpty() &&
+                        Objects.requireNonNull(tfSalary.getEditText()).getText().toString().trim().isEmpty() &&
+                        Objects.requireNonNull(tfHireDate.getEditText()).getText().toString().trim().isEmpty()
+        );
+    }
+
+    private void setUpdatableEmployeeData(int position) {
+        Objects.requireNonNull(tfFirstName.getEditText())
+                .setText(employeeArrayList.get(position).getFirstName());
+
+        Objects.requireNonNull(tfLastName.getEditText())
+                .setText(employeeArrayList.get(position).getLastName());
+
+        Objects.requireNonNull(tfDateOfBirth.getEditText())
+                .setText(employeeArrayList.get(position).getDateOfBirth());
+
+        Objects.requireNonNull(tfJobTitle.getEditText())
+                .setText(employeeArrayList.get(position).getJobTitle());
+
+        Objects.requireNonNull(tfSalary.getEditText())
+                .setText(String.valueOf(employeeArrayList.get(position).getSalary()));
+
+        Objects.requireNonNull(tfHireDate.getEditText())
+                .setText(employeeArrayList.get(position).getHireDate());
+    }
+
+    private void createUpdateDialog(int position) {
+        AlertDialog updateDialog;
+        AlertDialog.Builder updateBuilder = new AlertDialog.Builder(requireActivity());
+        updateBuilder.setTitle("Update employee");
+
+        View dialogView = getLayoutInflater().inflate(R.layout.employee_form_dialog, null);
+        initDialogViews(dialogView);
+
+        setUpdatableEmployeeData(position);
+
+        Button buttonCancel, buttonAction;
+        buttonCancel = dialogView.findViewById(R.id.btn_cancel);
+        buttonAction = dialogView.findViewById(R.id.btn_action);
+        buttonAction.setText("Update");
+
+        updateBuilder.setView(dialogView);
+        updateDialog = updateBuilder.create();
+        updateDialog.setCancelable(false);
+        updateDialog.show();
+
+        buttonCancel.setOnClickListener(view -> updateDialog.dismiss());
+
+        buttonAction.setOnClickListener(view -> {
+            Toast.makeText(requireActivity(), "Updating data...", Toast.LENGTH_SHORT).show();
+            updateDialog.dismiss();
+        });
+
+
 
     }
 
-    private void clearFields() {
-        Objects.requireNonNull(tfFirstName.getEditText()).setText("");
-        Objects.requireNonNull(tfLastName.getEditText()).setText("");
-        Objects.requireNonNull(tfDateOfBirth.getEditText()).setText(R.string.string_date_format);
-        Objects.requireNonNull(tfJobTitle.getEditText()).setText("");
-        Objects.requireNonNull(tfSalary.getEditText()).setText("");
-        Objects.requireNonNull(tfHireDate.getEditText()).setText(R.string.string_date_format);
-        dialogView.clearFocus();
+    @Override
+    public void onItemClick(int position) {
+        createUpdateDialog(position);
     }
 }

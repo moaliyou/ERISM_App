@@ -14,4 +14,8 @@
     <string name="string_salary">Salary</string>
     <string name="string_hire_date">Hire Date</string>
     <string name="string_date_of_birth">Date of birth</string>
+    <string name="string_tv_id_no">ID No:</string>
+    <string name="string_tv_date_of_birth">Date of birth:</string>
+    <string name="string_tv_salary">Salary: $</string>
+    <string name="string_tv_hire_date">Hire date:</string>
 </resources>
