@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +35,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
     ArrayList<EmployeeModel> employeeArrayList;
     private View mainView;
     private FloatingActionButton fabAddEmployee;
+    private SearchView searchViewEmployee;
     private RecyclerView employeeRecyclerView;
     private EmployeeAdapter employeeAdapter;
     private TextInputLayout tfFirstName, tfLastName,
@@ -47,8 +50,6 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
 
         initViews();
 
-        eventHandling();
-
         employeeDataView();
 
         employeeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -56,6 +57,8 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         employeeAdapter = new EmployeeAdapter(getContext(), employeeArrayList, this);
         employeeRecyclerView.setAdapter(employeeAdapter);
         employeeAdapter.notifyDataSetChanged();
+
+        eventHandling();
 
         return mainView;
     }
@@ -75,6 +78,26 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
                 "Hassan Jamal", "General Manager", 700,
                 "12-12-1987", "23-05-2009"));
 
+        employeeArrayList.add(new EmployeeModel(1226, "Aisha",
+                "Omar Hassan", "Receipt Officer", 850,
+                "22-04-1999", "23-05-2019"));
+
+        employeeArrayList.add(new EmployeeModel(2342, "Ismail",
+                "Ahmed Hassan", "Marketing", 760,
+                "22-04-1993", "21-02-2012"));
+
+        employeeArrayList.add(new EmployeeModel(2156, "Nurdin",
+                "Ali Hussein", "Salesman", 850,
+                "12-08-1991", "12-11-2012"));
+
+        employeeArrayList.add(new EmployeeModel(1987, "Jamal",
+                "Husni Farah", "Marketing", 550,
+                "05-08-1998", "21-10-2020"));
+
+        employeeArrayList.add(new EmployeeModel(1987, "Farhan",
+                "Ahmed Mohamed", "Reporter", 650,
+                "01-03-1992", "15-08-2011"));
+
     }
 
     private void eventHandling() {
@@ -84,6 +107,53 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
             pickDateFor(tfDateOfBirth);
             pickDateFor(tfHireDate);
         });
+
+        searchViewEmployee.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterEmployeeList(newText);
+                return true;
+            }
+        });
+
+        employeeRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (!(dy > 0)) {
+                    fabAddEmployee.show();
+                    return;
+                }
+
+                fabAddEmployee.hide();
+
+            }
+        });
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void filterEmployeeList(String text) {
+        ArrayList<EmployeeModel> filteredEmployeeList = new ArrayList<>();
+        for (EmployeeModel employee:
+             employeeArrayList) {
+
+            if (employee.getFullName().toLowerCase().contains(text.toLowerCase()))
+                filteredEmployeeList.add(employee);
+
+        }
+
+        if (!filteredEmployeeList.isEmpty()) {
+            employeeAdapter.setFilteredList(filteredEmployeeList);
+        } else {
+            employeeAdapter.setFilteredList(filteredEmployeeList);
+        }
 
     }
 
@@ -146,6 +216,8 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
     private void initViews() {
         fabAddEmployee = mainView.findViewById(R.id.fab_add_new_employee);
         employeeRecyclerView = mainView.findViewById(R.id.rv_employee_list_view);
+        searchViewEmployee = mainView.findViewById(R.id.search_view_employee);
+        searchViewEmployee.clearFocus();
     }
 
     private boolean isFieldsEmpty() {

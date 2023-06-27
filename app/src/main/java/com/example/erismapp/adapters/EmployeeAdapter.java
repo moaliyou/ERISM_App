@@ -20,7 +20,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 
 
     private final Context mContext;
-    private final ArrayList<EmployeeModel> employeeArrayList;
+    private ArrayList<EmployeeModel> employeeArrayList;
     private final RecyclerViewInterface mRecyclerViewInterface;
 
     public EmployeeAdapter(Context context, ArrayList<EmployeeModel> employeeArrayList,
@@ -73,6 +73,11 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
     @Override
     public int getItemCount() {
         return (employeeArrayList != null) ? employeeArrayList.size() : 0;
+    }
+
+    public void setFilteredList(ArrayList<EmployeeModel> filteredEmployeeList) {
+        this.employeeArrayList = filteredEmployeeList;
+        notifyDataSetChanged();
     }
 
     public static class EmployeeViewHolder extends RecyclerView.ViewHolder {
