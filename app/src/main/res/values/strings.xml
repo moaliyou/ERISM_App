@@ -18,4 +18,21 @@
     <string name="string_tv_date_of_birth">Date of birth:</string>
     <string name="string_tv_salary">Salary: $</string>
     <string name="string_tv_hire_date">Hire date:</string>
+
+    <string-array name="contributionFrequency">
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Quarterly</item>
+        <item>Annually</item>
+    </string-array>
+
+    <string-array name="employeeNames">
+        <item>Abdirahman Kasim Hassan</item>
+        <item>Aisha Hassan Salad</item>
+        <item>Osman Rage Jama</item>
+        <item>Salad Hussein Ali</item>
+        <item>Daud Ahmed Ali</item>
+        <item>Mohamed Abdirahman Ahmed</item>
+    </string-array>
+
 </resources>

@@ -149,11 +149,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
 
         }
 
-        if (!filteredEmployeeList.isEmpty()) {
-            employeeAdapter.setFilteredList(filteredEmployeeList);
-        } else {
-            employeeAdapter.setFilteredList(filteredEmployeeList);
-        }
+        employeeAdapter.setFilteredList(filteredEmployeeList);
 
     }
 

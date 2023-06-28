@@ -75,6 +75,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         return (employeeArrayList != null) ? employeeArrayList.size() : 0;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setFilteredList(ArrayList<EmployeeModel> filteredEmployeeList) {
         this.employeeArrayList = filteredEmployeeList;
         notifyDataSetChanged();
