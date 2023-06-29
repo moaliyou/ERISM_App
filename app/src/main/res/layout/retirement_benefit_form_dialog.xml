@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Select Employee"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -49,9 +51,8 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tf_contribution_amount"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:hint="Amount"
         app:prefixText="$"
         app:helperTextEnabled="true"
@@ -60,29 +61,30 @@
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusTopStart="12dp"
-        app:layout_constraintEnd_toStartOf="@id/drd_contribution_frequency_layout"
+        app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rg_benefit_type">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="numberDecimal"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/drd_contribution_frequency_layout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:hint="Select frequency"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tf_contribution_amount"
-        app:layout_constraintTop_toBottomOf="@id/tf_contribution_amount"
-        app:layout_constraintTop_toTopOf="@id/tf_contribution_amount">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tf_contribution_amount">
 
         <AutoCompleteTextView
             android:id="@+id/drd_contribution_frequency"
@@ -106,7 +108,7 @@
         app:boxCornerRadiusTopStart="12dp"
         app:layout_constraintEnd_toStartOf="@id/tf_benefit_end_date"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tf_contribution_amount">
+        app:layout_constraintTop_toBottomOf="@id/drd_contribution_frequency_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
