@@ -1,5 +1,6 @@
 package com.example.erismapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,18 +14,24 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.erismapp.R;
+import com.example.erismapp.adapters.RetirementBenefitAdapter;
+import com.example.erismapp.interfaces.RecyclerViewInterface;
+import com.example.erismapp.models.RetirementBenefitModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class RetirementBenefitFragment extends Fragment {
+public class RetirementBenefitFragment extends Fragment implements RecyclerViewInterface {
 
     private View mainView;
     private FloatingActionButton fabAddRetirementBenefit;
@@ -32,6 +39,9 @@ public class RetirementBenefitFragment extends Fragment {
     private TextInputLayout tfContributionAmount, tfBenefitStartDate, tfBenefitEndDate;
     private RadioGroup rgBenefitType;
     private RadioButton rbSelectedBenefitType;
+    private RecyclerView retirementBenefitRecyclerView;
+    private RetirementBenefitAdapter retirementBenefitAdapter;
+    private ArrayList<RetirementBenefitModel> retirementBenefitList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,14 +49,23 @@ public class RetirementBenefitFragment extends Fragment {
         // Inflate the layout for this fragment
         mainView = inflater.inflate(R.layout.fragment_retirement_benefit, container, false);
 
+        retirementBenefitDataView();
         initViews();
         eventHandling();
 
         return mainView;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initViews() {
         fabAddRetirementBenefit = mainView.findViewById(R.id.fab_retirement_benefit);
+        retirementBenefitRecyclerView = mainView.findViewById(R.id.rv_retirement_benefit);
+
+        retirementBenefitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        retirementBenefitRecyclerView.setHasFixedSize(true);
+        retirementBenefitAdapter = new RetirementBenefitAdapter(getContext(), retirementBenefitList, this);
+        retirementBenefitRecyclerView.setAdapter(retirementBenefitAdapter);
+        retirementBenefitAdapter.notifyDataSetChanged();
     }
 
     private void setContributionFrequency() {
@@ -125,6 +144,47 @@ public class RetirementBenefitFragment extends Fragment {
         rbSelectedBenefitType = view.findViewById(checkedRadioButtonId);
     }
 
+    private void retirementBenefitDataView() {
+        retirementBenefitList = new ArrayList<>();
+
+        retirementBenefitList.add(new RetirementBenefitModel(
+                        "Abdirahman Mohamed Ali", "Pension", 650,
+                        "Monthly", "12-12-2002", "09-02-2027"
+                )
+        );
+
+        retirementBenefitList.add(new RetirementBenefitModel(
+                "Ahmed Hajji Omar", "Pension", 70,
+                "Monthly", "03-02-1992", "01-11-2024")
+        );
+
+        retirementBenefitList.add(new RetirementBenefitModel(
+                "Kamal Hassan Jamal", "Social Security", 90,
+                "Quarterly", "21-10-2004", "09-09-2030")
+        );
+
+        retirementBenefitList.add(new RetirementBenefitModel(
+                "Hassan Ali Hussein", "Pension", 290,
+                "Weekly", "18-11-1991", "11-05-2025")
+        );
+
+        retirementBenefitList.add(new RetirementBenefitModel(
+                "Ahmed Mohamed Abdi", "Social Security", 110,
+                "Quarterly", "14-01-2003", "15-08-2029")
+        );
+
+        retirementBenefitList.add(new RetirementBenefitModel(
+                "Farhan Kasim Ali", "Social Security", 80,
+                "Monthly", "17-10-2001", "19-05-2025")
+        );
+
+        retirementBenefitList.add(new RetirementBenefitModel(
+                "Hamdi Ali Osman", "Social Security", 45,
+                "Weekly", "01-02-1999", "18-04-2030")
+        );
+
+    }
+
     private void pickDateFor(TextInputLayout mTextInput) {
         Objects.requireNonNull(mTextInput.getEditText()).setOnClickListener(v -> {
 
@@ -143,4 +203,13 @@ public class RetirementBenefitFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onItemClick(int position) {
+
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+
+    }
 }

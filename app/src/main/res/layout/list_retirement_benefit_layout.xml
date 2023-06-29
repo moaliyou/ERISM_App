@@ -42,13 +42,13 @@
                 android:id="@+id/lb_benefit_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Benefit Type"
                 android:layout_marginTop="8dp"
+                android:text="Benefit Type"
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                 app:layout_constraintEnd_toStartOf="@+id/lb_contribution_amount"
-                app:layout_constraintTop_toBottomOf="@id/tv_employee_name"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_employee_name" />
 
             <TextView
                 android:id="@+id/lb_contribution_amount"
@@ -59,7 +59,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/lb_contribution_frequency"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/lb_benefit_type"
-                app:layout_constraintTop_toTopOf="@id/lb_benefit_type"/>
+                app:layout_constraintTop_toTopOf="@id/lb_benefit_type" />
 
             <TextView
                 android:id="@+id/lb_contribution_frequency"
@@ -70,29 +70,32 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/lb_contribution_amount"
-                app:layout_constraintTop_toTopOf="@id/lb_contribution_amount"/>
+                app:layout_constraintTop_toTopOf="@id/lb_contribution_amount" />
 
             <TextView
                 android:id="@+id/tv_benefit_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
                 android:text="Social Security"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 app:layout_constraintEnd_toStartOf="@+id/tv_contribution_amount"
-                app:layout_constraintTop_toBottomOf="@id/lb_benefit_type"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/lb_benefit_type" />
 
             <TextView
                 android:id="@+id/tv_contribution_amount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
                 android:text="$900"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_benefit_type"
                 app:layout_constraintEnd_toStartOf="@+id/tv_contribution_frequency"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/tv_benefit_type"
-                app:layout_constraintTop_toTopOf="@id/tv_benefit_type"/>
+                app:layout_constraintTop_toTopOf="@+id/tv_benefit_type" />
 
             <TextView
                 android:id="@+id/tv_contribution_frequency"
@@ -100,10 +103,11 @@
                 android:layout_height="wrap_content"
                 android:text="Quarterly"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_contribution_amount"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/tv_contribution_amount"
-                app:layout_constraintTop_toTopOf="@id/tv_contribution_amount"/>
+                app:layout_constraintTop_toTopOf="@+id/tv_contribution_amount" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
