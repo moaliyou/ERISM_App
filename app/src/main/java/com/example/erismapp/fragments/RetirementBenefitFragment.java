@@ -27,7 +27,9 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -38,10 +40,11 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private AutoCompleteTextView drdEmployeeNames, drdContributionFrequency;
     private TextInputLayout tfContributionAmount, tfBenefitStartDate, tfBenefitEndDate;
     private RadioGroup rgBenefitType;
-    private RadioButton rbSelectedBenefitType;
+    private RadioButton rbSelectedBenefitType, rbPension, rbSocialSecurity;
     private RecyclerView retirementBenefitRecyclerView;
     private RetirementBenefitAdapter retirementBenefitAdapter;
     private ArrayList<RetirementBenefitModel> retirementBenefitList;
+    private List<String> employeeNameList, contributionFrequencyList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,32 +66,39 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
         retirementBenefitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         retirementBenefitRecyclerView.setHasFixedSize(true);
-        retirementBenefitAdapter = new RetirementBenefitAdapter(getContext(), retirementBenefitList, this);
+        retirementBenefitAdapter = new RetirementBenefitAdapter(
+                getContext(), retirementBenefitList, this
+        );
         retirementBenefitRecyclerView.setAdapter(retirementBenefitAdapter);
         retirementBenefitAdapter.notifyDataSetChanged();
     }
 
     private void setContributionFrequency() {
-        String[] contributionFrequency = getResources().getStringArray(R.array.contributionFrequency);
+//        String[] contributionFrequency = getResources().getStringArray(R.array.contributionFrequency);
+
+        contributionFrequencyList = Arrays.asList(
+                getResources().getStringArray(R.array.contributionFrequency)
+        );
 
         ArrayAdapter<String> contributionFrequencyAdapter =
                 new ArrayAdapter<>(
                         requireActivity(),
                         R.layout.dropdown_items,
-                        contributionFrequency
+                        contributionFrequencyList
                 );
 
         drdContributionFrequency.setAdapter(contributionFrequencyAdapter);
     }
 
     private void setEmployeeNames() {
-        String[] employeeNames = getResources().getStringArray(R.array.employeeNames);
+//        String[] employeeNames = getResources().getStringArray(R.array.employeeNames);
+        employeeNameList = Arrays.asList(getResources().getStringArray(R.array.employeeNames));
 
         ArrayAdapter<String> employeeNamesAdapter =
                 new ArrayAdapter<>(
                         requireContext(),
                         R.layout.dropdown_items,
-                        employeeNames
+                        employeeNameList
                 );
 
         drdEmployeeNames.setAdapter(employeeNamesAdapter);
@@ -139,6 +149,8 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         tfBenefitStartDate = view.findViewById(R.id.tf_benefit_start_date);
         tfBenefitEndDate = view.findViewById(R.id.tf_benefit_end_date);
         rgBenefitType = view.findViewById(R.id.rg_benefit_type);
+        rbPension = view.findViewById(R.id.rb_pension_type);
+        rbSocialSecurity = view.findViewById(R.id.rb_social_security_type);
 
         int checkedRadioButtonId = rgBenefitType.getCheckedRadioButtonId();
         rbSelectedBenefitType = view.findViewById(checkedRadioButtonId);
@@ -203,8 +215,63 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         });
     }
 
+    private void setUpdatableRetirementBenefitData(int position) {
+        Objects.requireNonNull(drdEmployeeNames)
+                .setText(retirementBenefitList.get(position).getEmployeeName());
+
+        if (retirementBenefitList.get(position).getBenefitType().equalsIgnoreCase(rbPension.getText().toString())) {
+            rbPension.setChecked(true);
+        } else {
+            rbSocialSecurity.setChecked(true);
+        }
+
+        Objects.requireNonNull(tfContributionAmount.getEditText())
+                .setText(String.valueOf(retirementBenefitList.get(position).getContributionAmount()));
+
+        Objects.requireNonNull(drdContributionFrequency)
+                .setText(retirementBenefitList.get(position).getContributionFrequency());
+
+        Objects.requireNonNull(tfBenefitStartDate.getEditText())
+                .setText(String.valueOf(retirementBenefitList.get(position).getBenefitStartDate()));
+
+        Objects.requireNonNull(tfBenefitEndDate.getEditText())
+                .setText(retirementBenefitList.get(position).getBenefitEndDate());
+    }
+
+    private void createUpdateDialog(int position) {
+        AlertDialog updateDialog;
+        AlertDialog.Builder updateBuilder = new AlertDialog.Builder(requireActivity());
+        updateBuilder.setTitle("Update refinement benefit");
+
+        View dialogView = getLayoutInflater().inflate(R.layout.retirement_benefit_form_dialog, null);
+        initDialogViews(dialogView);
+
+        setUpdatableRetirementBenefitData(position);
+
+        Button buttonCancel, buttonAction;
+        buttonCancel = dialogView.findViewById(R.id.btn_cancel);
+        buttonAction = dialogView.findViewById(R.id.btn_action);
+        buttonAction.setText("Update");
+
+        updateBuilder.setView(dialogView);
+        updateDialog = updateBuilder.create();
+        updateDialog.setCancelable(false);
+        updateDialog.show();
+
+        buttonCancel.setOnClickListener(view -> updateDialog.dismiss());
+
+        buttonAction.setOnClickListener(view -> {
+            Toast.makeText(requireActivity(), "Updating data...", Toast.LENGTH_SHORT).show();
+            updateDialog.dismiss();
+        });
+
+
+    }
+
     @Override
     public void onItemClick(int position) {
+
+        createUpdateDialog(position);
 
     }
 

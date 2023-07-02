@@ -16,7 +16,8 @@ import com.example.erismapp.models.RetirementBenefitModel;
 
 import java.util.ArrayList;
 
-public class RetirementBenefitAdapter extends RecyclerView.Adapter<RetirementBenefitAdapter.RetirementBenefitViewHolder> {
+public class RetirementBenefitAdapter extends
+        RecyclerView.Adapter<RetirementBenefitAdapter.RetirementBenefitViewHolder> {
 
 
     private final Context mContext;
