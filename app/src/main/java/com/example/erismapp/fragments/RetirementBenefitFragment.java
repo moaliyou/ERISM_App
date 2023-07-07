@@ -22,6 +22,7 @@ import com.example.erismapp.adapters.RetirementBenefitAdapter;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.RetirementBenefitModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -287,6 +288,24 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     }
 
+    private void deleteDataAt(int position) {
+        new MaterialAlertDialogBuilder(requireActivity())
+                .setTitle("Delete from list?")
+                .setMessage(
+                        retirementBenefitList.get(position).getEmployeeName() +
+                                " will no longer be in the list."
+                )
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
+                .setPositiveButton("Delete", (dialogInterface, i) -> {
+                    retirementBenefitList.remove(position);
+                    retirementBenefitAdapter.notifyItemRemoved(position);
+                    Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+                    dialogInterface.dismiss();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
     @Override
     public void onItemClick(int position) {
 
@@ -296,6 +315,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     @Override
     public void onItemLongClick(int position) {
-
+        deleteDataAt(position);
     }
 }
