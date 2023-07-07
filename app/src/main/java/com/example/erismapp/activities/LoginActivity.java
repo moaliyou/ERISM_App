@@ -25,5 +25,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void startSystem(View view) {
         Toast.makeText(this, "Incorrect username or password", Toast.LENGTH_SHORT).show();
+        Intent mIntent = new Intent(LoginActivity.this, Dashboard.class);
+        mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(mIntent);
     }
 }

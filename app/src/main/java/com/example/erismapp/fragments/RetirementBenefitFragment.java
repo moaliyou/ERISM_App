@@ -37,14 +37,15 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     private View mainView;
     private FloatingActionButton fabAddRetirementBenefit;
-    private AutoCompleteTextView drdEmployeeNames, drdContributionFrequency;
+    private AutoCompleteTextView drdEmployeeNames, drdContributionFrequency, drdRetirementPlans;
     private TextInputLayout tfContributionAmount, tfBenefitStartDate, tfBenefitEndDate;
     private RadioGroup rgBenefitType;
-    private RadioButton rbSelectedBenefitType, rbPension, rbSocialSecurity;
+    private RadioButton rbSelectedBenefitType,
+            rbPensionPayment, rbSocialSecurity, rbHealthInsurance, rbLifeInsurance;
     private RecyclerView retirementBenefitRecyclerView;
     private RetirementBenefitAdapter retirementBenefitAdapter;
     private ArrayList<RetirementBenefitModel> retirementBenefitList;
-    private List<String> employeeNameList, contributionFrequencyList;
+    private List<String> employeeNameList, contributionFrequencyList, retirementPlanList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,8 +75,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     }
 
     private void setContributionFrequency() {
-//        String[] contributionFrequency = getResources().getStringArray(R.array.contributionFrequency);
-
         contributionFrequencyList = Arrays.asList(
                 getResources().getStringArray(R.array.contributionFrequency)
         );
@@ -91,7 +90,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     }
 
     private void setEmployeeNames() {
-//        String[] employeeNames = getResources().getStringArray(R.array.employeeNames);
         employeeNameList = Arrays.asList(getResources().getStringArray(R.array.employeeNames));
 
         ArrayAdapter<String> employeeNamesAdapter =
@@ -104,6 +102,19 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         drdEmployeeNames.setAdapter(employeeNamesAdapter);
     }
 
+    private void setRetirementPlans() {
+        retirementPlanList = Arrays.asList(getResources().getStringArray(R.array.retirementPlans));
+
+        ArrayAdapter<String> retirementPlanAdapter =
+                new ArrayAdapter<>(
+                        requireContext(),
+                        R.layout.dropdown_items,
+                        retirementPlanList
+                );
+
+        drdRetirementPlans.setAdapter(retirementPlanAdapter);
+    }
+
     private void eventHandling() {
 
         fabAddRetirementBenefit.setOnClickListener(view -> {
@@ -112,6 +123,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             pickDateFor(tfBenefitEndDate);
             setEmployeeNames();
             setContributionFrequency();
+            setRetirementPlans();
         });
 
     }
@@ -145,12 +157,15 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private void initDialogViews(View view) {
         drdEmployeeNames = view.findViewById(R.id.drd_employee_names);
         drdContributionFrequency = view.findViewById(R.id.drd_contribution_frequency);
+        drdRetirementPlans = view.findViewById(R.id.drd_retirement_plan);
         tfContributionAmount = view.findViewById(R.id.tf_contribution_amount);
         tfBenefitStartDate = view.findViewById(R.id.tf_benefit_start_date);
         tfBenefitEndDate = view.findViewById(R.id.tf_benefit_end_date);
         rgBenefitType = view.findViewById(R.id.rg_benefit_type);
-        rbPension = view.findViewById(R.id.rb_pension_type);
+        rbPensionPayment = view.findViewById(R.id.rb_pension_payments_type);
         rbSocialSecurity = view.findViewById(R.id.rb_social_security_type);
+        rbHealthInsurance = view.findViewById(R.id.rb_health_insurance_type);
+        rbLifeInsurance = view.findViewById(R.id.rb_life_insurance_type);
 
         int checkedRadioButtonId = rgBenefitType.getCheckedRadioButtonId();
         rbSelectedBenefitType = view.findViewById(checkedRadioButtonId);
@@ -160,13 +175,13 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         retirementBenefitList = new ArrayList<>();
 
         retirementBenefitList.add(new RetirementBenefitModel(
-                        "Abdirahman Mohamed Ali", "Pension", 650,
+                        "Abdirahman Mohamed Ali", "Pension Payments", 650,
                         "Monthly", "12-12-2002", "09-02-2027"
                 )
         );
 
         retirementBenefitList.add(new RetirementBenefitModel(
-                "Ahmed Hajji Omar", "Pension", 70,
+                "Ahmed Hajji Omar", "Life Insurance", 70,
                 "Monthly", "03-02-1992", "01-11-2024")
         );
 
@@ -176,7 +191,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         );
 
         retirementBenefitList.add(new RetirementBenefitModel(
-                "Hassan Ali Hussein", "Pension", 290,
+                "Hassan Ali Hussein", "Health Insurance", 290,
                 "Weekly", "18-11-1991", "11-05-2025")
         );
 
@@ -186,12 +201,12 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         );
 
         retirementBenefitList.add(new RetirementBenefitModel(
-                "Farhan Kasim Ali", "Social Security", 80,
+                "Farhan Kasim Ali", "Pension Payments", 80,
                 "Monthly", "17-10-2001", "19-05-2025")
         );
 
         retirementBenefitList.add(new RetirementBenefitModel(
-                "Hamdi Ali Osman", "Social Security", 45,
+                "Hamdi Ali Osman", "Life Insurance", 45,
                 "Weekly", "01-02-1999", "18-04-2030")
         );
 
@@ -219,10 +234,14 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         Objects.requireNonNull(drdEmployeeNames)
                 .setText(retirementBenefitList.get(position).getEmployeeName());
 
-        if (retirementBenefitList.get(position).getBenefitType().equalsIgnoreCase(rbPension.getText().toString())) {
-            rbPension.setChecked(true);
-        } else {
+        if (retirementBenefitList.get(position).getBenefitType().equalsIgnoreCase(rbPensionPayment.getText().toString())) {
+            rbPensionPayment.setChecked(true);
+        } else if (retirementBenefitList.get(position).getBenefitType().equalsIgnoreCase(rbSocialSecurity.getText().toString())) {
             rbSocialSecurity.setChecked(true);
+        } else if (retirementBenefitList.get(position).getBenefitType().equalsIgnoreCase(rbHealthInsurance.getText().toString())) {
+            rbHealthInsurance.setChecked(true);
+        } else {
+            rbLifeInsurance.setChecked(true);
         }
 
         Objects.requireNonNull(tfContributionAmount.getEditText())

@@ -35,4 +35,10 @@
         <item>Mohamed Abdirahman Ahmed</item>
     </string-array>
 
+    <string-array name="retirementPlans">
+        <item>401(k)</item>
+        <item>Individual Retirement Account</item>
+        <item>Profit-Sharing</item>
+    </string-array>
+
 </resources>
