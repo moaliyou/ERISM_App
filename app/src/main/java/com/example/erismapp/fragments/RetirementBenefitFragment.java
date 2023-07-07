@@ -121,7 +121,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle("New retirement benefit");
 
-        View dialogView = getLayoutInflater().inflate(R.layout.retirement_benefit_form_dialog, null);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_retirement_benefit, null);
         initDialogViews(dialogView);
 
         Button buttonCancel, buttonAction;
@@ -243,7 +243,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         AlertDialog.Builder updateBuilder = new AlertDialog.Builder(requireActivity());
         updateBuilder.setTitle("Update refinement benefit");
 
-        View dialogView = getLayoutInflater().inflate(R.layout.retirement_benefit_form_dialog, null);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_retirement_benefit, null);
         initDialogViews(dialogView);
 
         setUpdatableRetirementBenefitData(position);
