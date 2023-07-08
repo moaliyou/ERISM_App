@@ -169,7 +169,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle("Register employee");
 
-        View dialogView = getLayoutInflater().inflate(R.layout.employee_form_dialog, null);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_employee, null);
         initDialogViews(dialogView);
 
         Button buttonCancel, buttonAction;
@@ -252,7 +252,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         AlertDialog.Builder updateBuilder = new AlertDialog.Builder(requireActivity());
         updateBuilder.setTitle("Update employee");
 
-        View dialogView = getLayoutInflater().inflate(R.layout.employee_form_dialog, null);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_employee, null);
         initDialogViews(dialogView);
 
         setUpdatableEmployeeData(position);
