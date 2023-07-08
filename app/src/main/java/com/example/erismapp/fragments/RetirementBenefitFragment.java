@@ -308,9 +308,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     @Override
     public void onItemClick(int position) {
-
         createUpdateDialog(position);
-
     }
 
     @Override
