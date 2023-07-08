@@ -141,8 +141,8 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
     @SuppressLint("NotifyDataSetChanged")
     private void filterEmployeeList(String text) {
         ArrayList<EmployeeModel> filteredEmployeeList = new ArrayList<>();
-        for (EmployeeModel employee:
-             employeeArrayList) {
+        for (EmployeeModel employee :
+                employeeArrayList) {
 
             if (employee.getFullName().toLowerCase().contains(text.toLowerCase()))
                 filteredEmployeeList.add(employee);
@@ -216,7 +216,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         searchViewEmployee.clearFocus();
     }
 
-    private boolean isFieldsEmpty() {
+    private boolean isFieldEmpty() {
         return !(
                 Objects.requireNonNull(tfFirstName.getEditText()).getText().toString().trim().isEmpty() &&
                         Objects.requireNonNull(tfLastName.getEditText()).getText().toString().trim().isEmpty() &&
@@ -245,6 +245,10 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
 
         Objects.requireNonNull(tfHireDate.getEditText())
                 .setText(employeeArrayList.get(position).getHireDate());
+
+        pickDateFor(tfDateOfBirth);
+        pickDateFor(tfHireDate);
+
     }
 
     private void createUpdateDialog(int position) {
@@ -270,8 +274,28 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         buttonCancel.setOnClickListener(view -> updateDialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            Toast.makeText(requireActivity(), "Updating data...", Toast.LENGTH_SHORT).show();
-            updateDialog.dismiss();
+            if (!isFieldEmpty()) {
+
+                Toast.makeText(
+                                requireActivity(),
+                                "Updating data...",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show();
+
+                updateDialog.dismiss();
+
+            } else {
+
+                Toast.makeText(
+                                requireActivity(),
+                                "Meelaha banaan buuxi",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show();
+
+            }
+
         });
 
 
