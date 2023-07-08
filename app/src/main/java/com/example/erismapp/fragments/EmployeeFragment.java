@@ -184,8 +184,25 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         buttonCancel.setOnClickListener(view -> dialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            Toast.makeText(requireActivity(), "Saving data...", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+
+            if (isFieldEmpty()) {
+                Toast.makeText(
+                                requireActivity(),
+                                "Fadlan buuxi meelaha banaan",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show();
+            } else {
+                Toast.makeText(
+                                requireActivity(),
+                                "Saved successfully",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show();
+
+                dialog.dismiss();
+            }
+
         });
 
     }
@@ -217,13 +234,26 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
     }
 
     private boolean isFieldEmpty() {
-        return !(
-                Objects.requireNonNull(tfFirstName.getEditText()).getText().toString().trim().isEmpty() &&
-                        Objects.requireNonNull(tfLastName.getEditText()).getText().toString().trim().isEmpty() &&
-                        Objects.requireNonNull(tfJobTitle.getEditText()).getText().toString().trim().isEmpty() &&
-                        Objects.requireNonNull(tfDateOfBirth.getEditText()).getText().toString().trim().isEmpty() &&
-                        Objects.requireNonNull(tfSalary.getEditText()).getText().toString().trim().isEmpty() &&
-                        Objects.requireNonNull(tfHireDate.getEditText()).getText().toString().trim().isEmpty()
+        return (
+                Objects.requireNonNull(tfFirstName.getEditText())
+                        .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfLastName.getEditText())
+                                .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfJobTitle.getEditText())
+                                .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfDateOfBirth.getEditText())
+                                .getText().toString().equals(
+                                        getResources().getString(R.string.string_date_format)) ||
+
+                        Objects.requireNonNull(tfSalary.getEditText())
+                                .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfHireDate.getEditText())
+                                .getText().toString().equals(
+                                        getResources().getString(R.string.string_date_format))
         );
     }
 
