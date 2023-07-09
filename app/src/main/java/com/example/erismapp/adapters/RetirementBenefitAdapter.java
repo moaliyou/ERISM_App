@@ -54,6 +54,7 @@ public class RetirementBenefitAdapter extends
         holder.tvContributionAmount.setText("$" +
                 retirementBenefitModel.getContributionAmount()
         );
+        holder.tvRetirementPlan.setText(retirementBenefitModel.getRetirementPlan());
         holder.tvContributionFrequency.setText(retirementBenefitModel.getContributionFrequency());
         holder.tvBenefitStartDate.setText(retirementBenefitModel.getBenefitStartDate());
         holder.tvBenefitEndDate.setText(retirementBenefitModel.getBenefitEndDate());
@@ -74,7 +75,7 @@ public class RetirementBenefitAdapter extends
     public static class RetirementBenefitViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvEmployeeName, tvBenefitType,
-                tvContributionAmount, tvContributionFrequency,
+                tvContributionAmount, tvContributionFrequency, tvRetirementPlan,
                 tvBenefitStartDate, tvBenefitEndDate;
 
         public RetirementBenefitViewHolder(@NonNull View itemView, RecyclerViewInterface recyclerViewInterface) {
@@ -84,6 +85,7 @@ public class RetirementBenefitAdapter extends
             tvBenefitType = itemView.findViewById(R.id.tv_benefit_type);
             tvContributionAmount = itemView.findViewById(R.id.tv_contribution_amount);
             tvContributionFrequency = itemView.findViewById(R.id.tv_contribution_frequency);
+            tvRetirementPlan = itemView.findViewById(R.id.tv_retirement_plan);
             tvBenefitStartDate = itemView.findViewById(R.id.tv_benefit_start_date);
             tvBenefitEndDate = itemView.findViewById(R.id.tv_benefit_end_date);
 

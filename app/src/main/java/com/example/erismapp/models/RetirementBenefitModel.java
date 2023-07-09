@@ -2,17 +2,18 @@ package com.example.erismapp.models;
 
 public class RetirementBenefitModel {
 
-    private int retirementBenefitId;
     private final String employeeName;
     private final String benefitType;
     private final double contributionAmount;
     private final String contributionFrequency;
+    private final String retirementPlan;
     private final String benefitStartDate;
     private final String benefitEndDate;
+    private int retirementBenefitId;
 
     public RetirementBenefitModel(
             int retirementBenefitId, String employeeName, String benefitType,
-            double contributionAmount, String contributionFrequency,
+            double contributionAmount, String contributionFrequency, String retirementPlan,
             String benefitStartDate, String benefitEndDate
     ) {
         this.retirementBenefitId = retirementBenefitId;
@@ -20,19 +21,21 @@ public class RetirementBenefitModel {
         this.benefitType = benefitType;
         this.contributionAmount = contributionAmount;
         this.contributionFrequency = contributionFrequency;
+        this.retirementPlan = retirementPlan;
         this.benefitStartDate = benefitStartDate;
         this.benefitEndDate = benefitEndDate;
     }
 
     public RetirementBenefitModel(
             String employeeName, String benefitType,
-            double contributionAmount, String contributionFrequency,
+            double contributionAmount, String contributionFrequency, String retirementPlan,
             String benefitStartDate, String benefitEndDate
     ) {
         this.employeeName = employeeName;
         this.benefitType = benefitType;
         this.contributionAmount = contributionAmount;
         this.contributionFrequency = contributionFrequency;
+        this.retirementPlan = retirementPlan;
         this.benefitStartDate = benefitStartDate;
         this.benefitEndDate = benefitEndDate;
     }
@@ -63,6 +66,10 @@ public class RetirementBenefitModel {
 
     public String getBenefitEndDate() {
         return benefitEndDate;
+    }
+
+    public String getRetirementPlan() {
+        return retirementPlan;
     }
 
     @Override

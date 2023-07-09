@@ -175,40 +175,63 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private void retirementBenefitDataView() {
         retirementBenefitList = new ArrayList<>();
 
-        retirementBenefitList.add(new RetirementBenefitModel(
-                        "Abdirahman Mohamed Ali", "Pension Payments", 650,
-                        "Monthly", "12-12-2002", "09-02-2027"
+        retirementBenefitList.add(
+                new RetirementBenefitModel(
+                        "Abdirahman Mohamed Ali",
+                        "Pension Payments",
+                        650,
+                        "Monthly",
+                        "Profit Sharing",
+                        "12-12-2002",
+                        "09-02-2027"
                 )
         );
 
-        retirementBenefitList.add(new RetirementBenefitModel(
-                "Ahmed Hajji Omar", "Life Insurance", 70,
-                "Monthly", "03-02-1992", "01-11-2024")
+        retirementBenefitList.add(
+                new RetirementBenefitModel(
+                        "Ahmed Hajji Omar",
+                        "Life Insurance",
+                        70,
+                        "Monthly",
+                        "401(k)",
+                        "03-02-1992",
+                        "01-11-2024"
+                )
         );
 
-        retirementBenefitList.add(new RetirementBenefitModel(
-                "Kamal Hassan Jamal", "Social Security", 90,
-                "Quarterly", "21-10-2004", "09-09-2030")
+        retirementBenefitList.add(
+                new RetirementBenefitModel(
+                        "Kamal Hassan Jamal", "" +
+                        "Social Security",
+                        90,
+                        "Quarterly",
+                        "Individual Retirement Account",
+                        "21-10-2004",
+                        "09-09-2030"
+                )
         );
 
-        retirementBenefitList.add(new RetirementBenefitModel(
-                "Hassan Ali Hussein", "Health Insurance", 290,
-                "Weekly", "18-11-1991", "11-05-2025")
+        retirementBenefitList.add(
+                new RetirementBenefitModel(
+                        "Hassan Ali Hussein",
+                        "Health Insurance",
+                        290,
+                        "Weekly",
+                        "Profit Sharing",
+                        "18-11-1991",
+                        "11-05-2025"
+                )
         );
 
-        retirementBenefitList.add(new RetirementBenefitModel(
-                "Ahmed Mohamed Abdi", "Social Security", 110,
-                "Quarterly", "14-01-2003", "15-08-2029")
-        );
-
-        retirementBenefitList.add(new RetirementBenefitModel(
-                "Farhan Kasim Ali", "Pension Payments", 80,
-                "Monthly", "17-10-2001", "19-05-2025")
-        );
-
-        retirementBenefitList.add(new RetirementBenefitModel(
-                "Hamdi Ali Osman", "Life Insurance", 45,
-                "Weekly", "01-02-1999", "18-04-2030")
+        retirementBenefitList.add(
+                new RetirementBenefitModel(
+                        "Ahmed Mohamed Abdi",
+                        "Social Security",
+                        110,
+                        "Quarterly",
+                        "Individual Retirement Account",
+                        "14-01-2003",
+                        "15-08-2029")
         );
 
     }
@@ -250,6 +273,9 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
         Objects.requireNonNull(drdContributionFrequency)
                 .setText(retirementBenefitList.get(position).getContributionFrequency());
+
+        Objects.requireNonNull(drdRetirementPlans)
+                .setText(retirementBenefitList.get(position).getRetirementPlan());
 
         Objects.requireNonNull(tfBenefitStartDate.getEditText())
                 .setText(String.valueOf(retirementBenefitList.get(position).getBenefitStartDate()));

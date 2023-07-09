@@ -28,7 +28,7 @@
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                 app:layout_constraintEnd_toStartOf="@+id/lb_benefit_end_date"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_contribution_amount" />
+                app:layout_constraintTop_toBottomOf="@id/tv_contribution_frequency" />
 
             <TextView
                 android:id="@+id/tv_benefit_start_date"
@@ -129,7 +129,7 @@
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                 app:layout_constraintEnd_toStartOf="@id/lb_contribution_frequency"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_benefit_type" />
+                app:layout_constraintTop_toBottomOf="@id/tv_retirement_plan" />
 
             <TextView
                 android:id="@+id/lb_contribution_frequency"
@@ -159,7 +159,7 @@
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 app:layout_constraintEnd_toEndOf="@id/lb_contribution_frequency"
                 app:layout_constraintStart_toEndOf="@+id/tv_contribution_amount"
-                app:layout_constraintTop_toTopOf="@+id/tv_contribution_amount" />
+                app:layout_constraintTop_toBottomOf="@+id/lb_contribution_frequency" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
