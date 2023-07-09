@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
+        style="?attr/materialCardViewElevatedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="?attr/materialCardViewElevatedStyle">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -24,13 +23,12 @@
                 android:id="@+id/lb_benefit_start_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="Start Date"
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                 app:layout_constraintEnd_toStartOf="@+id/lb_benefit_end_date"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_benefit_type" />
+                app:layout_constraintTop_toBottomOf="@id/tv_contribution_amount" />
 
             <TextView
                 android:id="@+id/tv_benefit_start_date"
@@ -83,16 +81,45 @@
                 app:layout_constraintTop_toBottomOf="@+id/lb_employee_name" />
 
             <TextView
+                android:id="@+id/lb_retirement_plan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Retirement Plan"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/lb_benefit_type"
+                app:layout_constraintTop_toTopOf="@id/lb_benefit_type" />
+
+            <TextView
+                android:id="@+id/tv_retirement_plan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Profit sharing"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintEnd_toEndOf="@id/lb_retirement_plan"
+                app:layout_constraintStart_toEndOf="@+id/tv_benefit_type"
+                app:layout_constraintTop_toTopOf="@+id/tv_benefit_type" />
+
+            <TextView
                 android:id="@+id/lb_benefit_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:text="Benefit Type"
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                app:layout_constraintEnd_toStartOf="@+id/lb_contribution_amount"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/lb_retirement_plan"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_employee_name" />
+
+            <TextView
+                android:id="@+id/tv_benefit_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Social Security"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintEnd_toStartOf="@id/tv_retirement_plan"
+                app:layout_constraintStart_toStartOf="@id/lb_benefit_type"
+                app:layout_constraintTop_toBottomOf="@id/lb_benefit_type" />
 
             <TextView
                 android:id="@+id/lb_contribution_amount"
@@ -100,10 +127,9 @@
                 android:layout_height="wrap_content"
                 android:text="Contr. Amount"
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                app:layout_constraintEnd_toStartOf="@+id/lb_contribution_frequency"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/lb_benefit_type"
-                app:layout_constraintTop_toTopOf="@id/lb_benefit_type" />
+                app:layout_constraintEnd_toStartOf="@id/lb_contribution_frequency"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_benefit_type" />
 
             <TextView
                 android:id="@+id/lb_contribution_frequency"
@@ -112,34 +138,18 @@
                 android:text="Contr. Frequency"
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/lb_contribution_amount"
                 app:layout_constraintTop_toTopOf="@id/lb_contribution_amount" />
-
-            <TextView
-                android:id="@+id/tv_benefit_type"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="Social Security"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                app:layout_constraintEnd_toStartOf="@+id/tv_contribution_amount"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lb_benefit_type" />
 
             <TextView
                 android:id="@+id/tv_contribution_amount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
                 android:text="$900"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_benefit_type"
-                app:layout_constraintEnd_toStartOf="@+id/tv_contribution_frequency"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tv_benefit_type"
-                app:layout_constraintTop_toTopOf="@+id/tv_benefit_type" />
+                app:layout_constraintEnd_toStartOf="@id/tv_contribution_frequency"
+                app:layout_constraintStart_toStartOf="@id/lb_contribution_amount"
+                app:layout_constraintTop_toBottomOf="@id/lb_contribution_amount" />
 
             <TextView
                 android:id="@+id/tv_contribution_frequency"
@@ -147,9 +157,7 @@
                 android:layout_height="wrap_content"
                 android:text="Quarterly"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_contribution_amount"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toEndOf="@id/lb_contribution_frequency"
                 app:layout_constraintStart_toEndOf="@+id/tv_contribution_amount"
                 app:layout_constraintTop_toTopOf="@+id/tv_contribution_amount" />
 
