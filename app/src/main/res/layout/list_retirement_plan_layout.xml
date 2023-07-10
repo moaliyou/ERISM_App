@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        style="?attr/materialCardViewElevatedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/lb_plan_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Plan Name"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_plan_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Matching contribution"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintStart_toStartOf="@+id/lb_plan_name"
+                app:layout_constraintTop_toBottomOf="@+id/lb_plan_name" />
+
+            <TextView
+                android:id="@+id/lb_plan_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Plan Type"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_plan_name" />
+
+            <TextView
+                android:id="@+id/tv_plan_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Defined Contribution"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintStart_toStartOf="@+id/lb_plan_type"
+                app:layout_constraintTop_toBottomOf="@+id/lb_plan_type" />
+
+            <TextView
+                android:id="@+id/lb_employer_contribution_rate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Employer Contr. Rate"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                app:layout_constraintEnd_toStartOf="@+id/lb_employee_contribution_rate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_plan_type" />
+
+            <TextView
+                android:id="@+id/tv_employer_contribution_rate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="2.5%"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintStart_toStartOf="@id/lb_employer_contribution_rate"
+                app:layout_constraintTop_toBottomOf="@id/lb_employer_contribution_rate" />
+
+            <TextView
+                android:id="@+id/lb_employee_contribution_rate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Employee Contr. Rate"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/lb_employer_contribution_rate"
+                app:layout_constraintTop_toTopOf="@id/lb_employer_contribution_rate" />
+
+            <TextView
+                android:id="@+id/tv_employee_contribution_rate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="8.75%"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintStart_toStartOf="@id/lb_employee_contribution_rate"
+                app:layout_constraintTop_toBottomOf="@id/lb_employee_contribution_rate" />
+
+            <TextView
+                android:id="@+id/lb_vesting_period"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="18dp"
+                android:text="Vesting Period"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                app:layout_constraintEnd_toStartOf="@+id/lb_max_contribution_limit"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_employer_contribution_rate" />
+
+            <TextView
+                android:id="@+id/tv_vesting_period"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="3 years"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_max_contribution_limit"
+                app:layout_constraintEnd_toStartOf="@+id/tv_max_contribution_limit"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/lb_vesting_period" />
+
+            <TextView
+                android:id="@+id/lb_max_contribution_limit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:text="Max Contribution Limit"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                app:layout_constraintBottom_toBottomOf="@+id/lb_vesting_period"
+                app:layout_constraintEnd_toStartOf="@+id/lb_min_contribution_limit"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/lb_vesting_period"
+                app:layout_constraintTop_toTopOf="@+id/lb_vesting_period" />
+
+            <TextView
+                android:id="@+id/tv_max_contribution_limit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$22,500"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintEnd_toStartOf="@+id/tv_min_contribution_limit"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv_vesting_period"
+                app:layout_constraintStart_toStartOf="@id/lb_max_contribution_limit"
+                app:layout_constraintTop_toBottomOf="@id/lb_max_contribution_limit" />
+
+            <TextView
+                android:id="@+id/lb_min_contribution_limit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Min Contribution Limit"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                app:layout_constraintBottom_toBottomOf="@+id/lb_max_contribution_limit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/lb_max_contribution_limit"
+                app:layout_constraintTop_toTopOf="@+id/lb_max_contribution_limit" />
+
+            <TextView
+                android:id="@+id/tv_min_contribution_limit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$4,500"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv_max_contribution_limit"
+                app:layout_constraintStart_toStartOf="@id/lb_min_contribution_limit"
+                app:layout_constraintTop_toBottomOf="@id/lb_min_contribution_limit" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
