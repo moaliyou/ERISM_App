@@ -37,7 +37,7 @@
 
     <string-array name="retirementPlans">
         <item>401(k)</item>
-        <item>Individual Retirement Account</item>
+        <item>Individual Retirement Accounts</item>
         <item>Profit Sharing</item>
     </string-array>
 
