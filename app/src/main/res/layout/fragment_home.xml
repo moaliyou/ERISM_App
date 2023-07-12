@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.PayoutsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="12dp">
+
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/tv_dashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Dashboard"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/no_of_employees_card"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="@color/md_theme_light_primaryContainer"
+            app:layout_constraintEnd_toStartOf="@id/max_contribution_card"
+            app:layout_constraintStart_toStartOf="@+id/tv_dashboard"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dashboard">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/lb_employee_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No. of employees"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    android:textColor="@color/md_theme_light_onPrimaryContainer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_employee_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="100"
+                    android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                    android:textColor="@color/md_theme_light_onPrimaryContainer"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/lb_employee_name"
+                    app:layout_constraintTop_toBottomOf="@+id/lb_employee_name" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/max_contribution_card"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/md_theme_light_secondaryContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/no_of_employees_card"
+            app:layout_constraintTop_toTopOf="@id/no_of_employees_card">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/lb_max_contribution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Max Contribution Limit"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    android:textColor="@color/md_theme_light_onSecondaryContainer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_max_contribution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="$22,500"
+                    android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                    android:textColor="@color/md_theme_light_onSecondaryContainer"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/lb_max_contribution"
+                    app:layout_constraintTop_toBottomOf="@+id/lb_max_contribution" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/min_contribution_card"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:cardBackgroundColor="@color/md_theme_light_errorContainer"
+            app:layout_constraintEnd_toStartOf="@id/highest_vesting_period_card"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/no_of_employees_card">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/lb_min_contribution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Min Contribution Limit"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    android:textColor="@color/md_theme_light_onErrorContainer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_min_contribution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="$4,500"
+                    android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                    android:textColor="@color/md_theme_light_onErrorContainer"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/lb_min_contribution"
+                    app:layout_constraintTop_toBottomOf="@+id/lb_min_contribution" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/highest_vesting_period_card"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/md_theme_light_surfaceVariant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/min_contribution_card"
+            app:layout_constraintTop_toTopOf="@id/min_contribution_card">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/lb_highest_vesting_period"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Highest Vesting Period"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    android:textColor="@color/md_theme_light_onSurfaceVariant"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_highest_vesting_period"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="5 years"
+                    android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                    android:textColor="@color/md_theme_light_onSurfaceVariant"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/lb_highest_vesting_period"
+                    app:layout_constraintTop_toBottomOf="@+id/lb_highest_vesting_period" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

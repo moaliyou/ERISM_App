@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.erismapp.R;
 import com.example.erismapp.databinding.ActivityDashboardBinding;
 import com.example.erismapp.fragments.EmployeeFragment;
+import com.example.erismapp.fragments.HomeFragment;
 import com.example.erismapp.fragments.PayoutsFragment;
 import com.example.erismapp.fragments.RetirementBenefitFragment;
 import com.example.erismapp.fragments.RetirementPlanFragment;
@@ -24,7 +25,7 @@ public class Dashboard extends AppCompatActivity {
         dashboardBinding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(dashboardBinding.getRoot());
 
-        replaceFragment(new EmployeeFragment());
+        replaceFragment(new HomeFragment());
 
         selectingNavigationItems();
 
@@ -35,7 +36,9 @@ public class Dashboard extends AppCompatActivity {
         dashboardBinding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            if (itemId == R.id.nav_menu_employee) {
+            if (itemId == R.id.nav_menu_home) {
+                replaceFragment(new HomeFragment());
+            } else if (itemId == R.id.nav_menu_employee) {
                 replaceFragment(new EmployeeFragment());
             } else if (itemId == R.id.nav_menu_retirement_benefit) {
                 replaceFragment(new RetirementBenefitFragment());
