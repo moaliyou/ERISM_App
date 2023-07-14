@@ -62,5 +62,31 @@
             app:layout_constraintTop_toBottomOf="@id/search_view_employee"
             tools:listitem="@layout/list_employee_layout" />
 
+        <ImageView
+            android:id="@+id/iv_inbox_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.3"
+            android:contentDescription="No data inbox"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_view_employee"
+            app:srcCompat="@drawable/ic_inbox" />
+
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:alpha="0.7"
+            android:text="No data"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_inbox_icon" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

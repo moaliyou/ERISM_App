@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +46,8 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
     private EmployeeAdapter employeeAdapter;
     private TextInputLayout tfFirstName, tfLastName,
             tfJobTitle, tfSalary, tfDateOfBirth, tfHireDate;
+    private TextView tvNoData;
+    private ImageView ivInboxIcon;
     private EmployeeRetirementDatabase mEmployeeRetirementDatabase;
 
     @SuppressLint("NotifyDataSetChanged")
@@ -74,7 +78,15 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         Cursor mCursor = mEmployeeRetirementDatabase
                 .readDataFrom(EmployeeHelperClass.displayDataEmployeeTable());
 
-        listEmployees(mCursor);
+        if (mCursor.getCount() != 0) {
+            ivInboxIcon.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
+            listEmployees(mCursor);
+            return;
+        }
+
+        ivInboxIcon.setVisibility(View.VISIBLE);
+        tvNoData.setVisibility(View.VISIBLE);
 
     }
 
@@ -227,11 +239,19 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
 
     @SuppressLint("NotifyDataSetChanged")
     private void refreshRecyclerViewData() {
+
         employeeArrayList.clear();
+
         Cursor mCursor = mEmployeeRetirementDatabase
                 .readDataFrom(EmployeeHelperClass.displayDataEmployeeTable());
-        listEmployees(mCursor);
-        employeeAdapter.notifyDataSetChanged();
+
+        if (mCursor.getCount() != 0) {
+            ivInboxIcon.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
+            listEmployees(mCursor);
+            employeeAdapter.notifyDataSetChanged();
+        }
+
     }
 
     private void pickDateFor(TextInputLayout mTextInput) {
@@ -258,6 +278,8 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         employeeRecyclerView = mainView.findViewById(R.id.rv_employee_list_view);
         searchViewEmployee = mainView.findViewById(R.id.search_view_employee);
         mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
+        ivInboxIcon = mainView.findViewById(R.id.iv_inbox_icon);
+        tvNoData = mainView.findViewById(R.id.tv_no_data);
         searchViewEmployee.clearFocus();
     }
 
@@ -413,6 +435,12 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
                     );
 
                     employeeArrayList.remove(position);
+
+                    if (employeeArrayList.size() < 1) {
+                        ivInboxIcon.setVisibility(View.VISIBLE);
+                        tvNoData.setVisibility(View.VISIBLE);
+                    }
+
                     employeeAdapter.notifyItemRemoved(position);
 
                     dialogInterface.dismiss();
