@@ -54,7 +54,6 @@ public class RetirementBenefitAdapter extends
         holder.tvContributionAmount.setText("$" +
                 retirementBenefitModel.getContributionAmount()
         );
-        holder.tvRetirementPlan.setText(retirementBenefitModel.getRetirementPlan());
         holder.tvContributionFrequency.setText(retirementBenefitModel.getContributionFrequency());
         holder.tvBenefitStartDate.setText(retirementBenefitModel.getBenefitStartDate());
         holder.tvBenefitEndDate.setText(retirementBenefitModel.getBenefitEndDate());

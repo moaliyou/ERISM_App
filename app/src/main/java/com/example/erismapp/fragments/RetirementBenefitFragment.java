@@ -2,6 +2,7 @@ package com.example.erismapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.erismapp.R;
 import com.example.erismapp.adapters.RetirementBenefitAdapter;
+import com.example.erismapp.database.EmployeeRetirementDatabase;
+import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.RetirementBenefitModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -41,6 +44,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private View mainView;
     private FloatingActionButton fabAddRetirementBenefit;
     private SearchView searchViewRetirementBenefit;
+    private EmployeeRetirementDatabase mEmployeeRetirementDatabase;
     private AutoCompleteTextView drdEmployeeNames, drdContributionFrequency, drdRetirementPlans;
     private TextInputLayout tfContributionAmount, tfBenefitStartDate, tfBenefitEndDate;
     private RadioGroup rgBenefitType;
@@ -69,6 +73,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         fabAddRetirementBenefit = mainView.findViewById(R.id.fab_retirement_benefit);
         retirementBenefitRecyclerView = mainView.findViewById(R.id.rv_retirement_benefit);
         searchViewRetirementBenefit = mainView.findViewById(R.id.search_view_retirement_benefit);
+        mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
 
         retirementBenefitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         retirementBenefitRecyclerView.setHasFixedSize(true);
@@ -94,8 +99,26 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         drdContributionFrequency.setAdapter(contributionFrequencyAdapter);
     }
 
+    private void listEmployeeNames(Cursor mCursor) {
+        while (mCursor.moveToNext()) {
+            employeeNameList
+                    .add(
+                            String.format(
+                                    "%s %s",
+                                    mCursor.getString(1),
+                                    mCursor.getString(2)
+                            )
+                    );
+        }
+    }
+
     private void setEmployeeNames() {
-        employeeNameList = Arrays.asList(getResources().getStringArray(R.array.employeeNames));
+        employeeNameList = new ArrayList<>();
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(EmployeeHelperClass.displayDataEmployeeTable());
+
+        listEmployeeNames(mCursor);
 
         ArrayAdapter<String> employeeNamesAdapter =
                 new ArrayAdapter<>(
@@ -166,8 +189,14 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         for (RetirementBenefitModel retirementBenefit :
                 retirementBenefitList) {
 
-            if (retirementBenefit.getEmployeeName().toLowerCase().contains(text.toLowerCase()))
+            if (
+                    retirementBenefit.getEmployeeName().toLowerCase()
+                            .contains(text.toLowerCase()) ||
+                            retirementBenefit.getBenefitType().toLowerCase()
+                                    .contains(text.toLowerCase())
+            ) {
                 filteredRetirementBenefitList.add(retirementBenefit);
+            }
 
         }
 
@@ -220,66 +249,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     private void retirementBenefitDataView() {
         retirementBenefitList = new ArrayList<>();
-
-        retirementBenefitList.add(
-                new RetirementBenefitModel(
-                        "Abdirahman Mohamed Ali",
-                        "Pension Payments",
-                        650,
-                        "Monthly",
-                        "Profit Sharing",
-                        "12-12-2002",
-                        "09-02-2027"
-                )
-        );
-
-        retirementBenefitList.add(
-                new RetirementBenefitModel(
-                        "Ahmed Hajji Omar",
-                        "Life Insurance",
-                        70,
-                        "Monthly",
-                        "401(k)",
-                        "03-02-1992",
-                        "01-11-2024"
-                )
-        );
-
-        retirementBenefitList.add(
-                new RetirementBenefitModel(
-                        "Kamal Hassan Jamal", "" +
-                        "Social Security",
-                        90,
-                        "Quarterly",
-                        "Individual Retirement Account",
-                        "21-10-2004",
-                        "09-09-2030"
-                )
-        );
-
-        retirementBenefitList.add(
-                new RetirementBenefitModel(
-                        "Hassan Ali Hussein",
-                        "Health Insurance",
-                        290,
-                        "Weekly",
-                        "Profit Sharing",
-                        "18-11-1991",
-                        "11-05-2025"
-                )
-        );
-
-        retirementBenefitList.add(
-                new RetirementBenefitModel(
-                        "Ahmed Mohamed Abdi",
-                        "Social Security",
-                        110,
-                        "Quarterly",
-                        "Individual Retirement Account",
-                        "14-01-2003",
-                        "15-08-2029")
-        );
-
     }
 
     private void pickDateFor(TextInputLayout mTextInput) {
@@ -319,9 +288,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
         Objects.requireNonNull(drdContributionFrequency)
                 .setText(retirementBenefitList.get(position).getContributionFrequency());
-
-        Objects.requireNonNull(drdRetirementPlans)
-                .setText(retirementBenefitList.get(position).getRetirementPlan());
 
         Objects.requireNonNull(tfBenefitStartDate.getEditText())
                 .setText(String.valueOf(retirementBenefitList.get(position).getBenefitStartDate()));
