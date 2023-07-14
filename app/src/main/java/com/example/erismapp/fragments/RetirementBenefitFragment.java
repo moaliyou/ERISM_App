@@ -13,6 +13,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +40,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     private View mainView;
     private FloatingActionButton fabAddRetirementBenefit;
+    private SearchView searchViewRetirementBenefit;
     private AutoCompleteTextView drdEmployeeNames, drdContributionFrequency, drdRetirementPlans;
     private TextInputLayout tfContributionAmount, tfBenefitStartDate, tfBenefitEndDate;
     private RadioGroup rgBenefitType;
@@ -65,6 +68,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private void initViews() {
         fabAddRetirementBenefit = mainView.findViewById(R.id.fab_retirement_benefit);
         retirementBenefitRecyclerView = mainView.findViewById(R.id.rv_retirement_benefit);
+        searchViewRetirementBenefit = mainView.findViewById(R.id.search_view_retirement_benefit);
 
         retirementBenefitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         retirementBenefitRecyclerView.setHasFixedSize(true);
@@ -126,6 +130,48 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             setContributionFrequency();
             setRetirementPlans();
         });
+
+        searchViewRetirementBenefit.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterRetirementBenefitList(newText);
+                return true;
+            }
+        });
+
+        retirementBenefitRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (!(dy > 0)) {
+                    fabAddRetirementBenefit.show();
+                    return;
+                }
+
+                fabAddRetirementBenefit.hide();
+
+            }
+        });
+
+    }
+
+    private void filterRetirementBenefitList(String text) {
+        ArrayList<RetirementBenefitModel> filteredRetirementBenefitList = new ArrayList<>();
+        for (RetirementBenefitModel retirementBenefit :
+                retirementBenefitList) {
+
+            if (retirementBenefit.getEmployeeName().toLowerCase().contains(text.toLowerCase()))
+                filteredRetirementBenefitList.add(retirementBenefit);
+
+        }
+
+        retirementBenefitAdapter.setFilteredList(filteredRetirementBenefitList);
 
     }
 

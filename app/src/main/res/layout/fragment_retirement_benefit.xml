@@ -28,6 +28,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view_retirement_benefit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@drawable/search_background"
+                app:iconifiedByDefault="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_retirement_benefit_fragment_title"
+                app:queryBackground="@android:color/transparent"
+                app:queryHint="Enter name..."
+                tools:layout_editor_absoluteY="12dp" />
+
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_retirement_benefit"
                 android:layout_width="wrap_content"
@@ -49,7 +63,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_retirement_benefit_fragment_title"
+                app:layout_constraintTop_toBottomOf="@id/search_view_retirement_benefit"
                 tools:listitem="@layout/list_retirement_benefit_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
