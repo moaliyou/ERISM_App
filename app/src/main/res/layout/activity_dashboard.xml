@@ -10,7 +10,6 @@
         android:id="@+id/topAppBar_Layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -20,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:menu="@menu/top_app_bar"
-                app:title="Dashboard" />
+                app:title="username" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

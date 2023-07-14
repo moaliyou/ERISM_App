@@ -18,6 +18,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="16dp"
             android:text="Employee List"
+            android:textColor="@color/md_theme_light_primary"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

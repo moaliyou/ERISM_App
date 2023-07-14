@@ -10,15 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="390dp"
-            android:background="@drawable/retirement_benefit_background"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -32,7 +23,7 @@
                 android:layout_marginTop="16dp"
                 android:text="Retirement Plans"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-                android:textColor="@color/md_theme_light_onPrimary"
+                android:textColor="@color/md_theme_light_primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
