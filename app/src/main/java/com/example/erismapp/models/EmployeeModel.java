@@ -10,14 +10,21 @@ public class EmployeeModel {
     private String dateOfBirth;
     private String hireDate;
 
-    public EmployeeModel(int employeeId, String firstName, String lastName, String jobTitle,
-                         double salary, String dateOfBirth, String hireDate) {
+    public EmployeeModel(
+            int employeeId,
+            String firstName,
+            String lastName,
+            String dateOfBirth,
+            String jobTitle,
+            double salary,
+            String hireDate
+    ) {
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
         this.jobTitle = jobTitle;
         this.salary = salary;
-        this.dateOfBirth = dateOfBirth;
         this.hireDate = hireDate;
     }
 

@@ -2,6 +2,7 @@ package com.example.erismapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.erismapp.R;
 import com.example.erismapp.adapters.EmployeeAdapter;
+import com.example.erismapp.database.EmployeeRetirementDatabase;
+import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.EmployeeModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -27,6 +30,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -40,6 +44,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
     private EmployeeAdapter employeeAdapter;
     private TextInputLayout tfFirstName, tfLastName,
             tfJobTitle, tfSalary, tfDateOfBirth, tfHireDate;
+    private EmployeeRetirementDatabase mEmployeeRetirementDatabase;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -66,38 +71,27 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
     private void employeeDataView() {
         employeeArrayList = new ArrayList<>();
 
-        employeeArrayList.add(new EmployeeModel(1292, "Abdirahman",
-                "Mohamed Ali", "Operator", 650,
-                "12-12-2020", "09-02-2017"));
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(EmployeeHelperClass.displayDataEmployeeTable());
 
-        employeeArrayList.add(new EmployeeModel(3432, "Ahmed",
-                "Hajji Omar", "Chief Officer", 950,
-                "12-12-1998", "03-02-2013"));
+        listEmployees(mCursor);
 
-        employeeArrayList.add(new EmployeeModel(1356, "Kamal",
-                "Hassan Jamal", "General Manager", 700,
-                "12-12-1987", "23-05-2009"));
+    }
 
-        employeeArrayList.add(new EmployeeModel(1226, "Aisha",
-                "Omar Hassan", "Receipt Officer", 850,
-                "22-04-1999", "23-05-2019"));
-
-        employeeArrayList.add(new EmployeeModel(2342, "Ismail",
-                "Ahmed Hassan", "Marketing", 760,
-                "22-04-1993", "21-02-2012"));
-
-        employeeArrayList.add(new EmployeeModel(2156, "Nurdin",
-                "Ali Hussein", "Salesman", 850,
-                "12-08-1991", "12-11-2012"));
-
-        employeeArrayList.add(new EmployeeModel(1987, "Jamal",
-                "Husni Farah", "Marketing", 550,
-                "05-08-1998", "21-10-2020"));
-
-        employeeArrayList.add(new EmployeeModel(1987, "Farhan",
-                "Ahmed Mohamed", "Reporter", 650,
-                "01-03-1992", "15-08-2011"));
-
+    private void listEmployees(Cursor mCursor) {
+        while (mCursor.moveToNext()) {
+            employeeArrayList.add(
+                    new EmployeeModel(
+                            Integer.parseInt(mCursor.getString(0)),
+                            mCursor.getString(1),
+                            mCursor.getString(2),
+                            mCursor.getString(3),
+                            mCursor.getString(4),
+                            Double.parseDouble(mCursor.getString(5)),
+                            mCursor.getString(6)
+                    )
+            );
+        }
     }
 
     private void eventHandling() {
@@ -172,6 +166,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_employee, null);
         initDialogViews(dialogView);
 
+
         Button buttonCancel, buttonAction;
         buttonCancel = dialogView.findViewById(R.id.btn_cancel);
         buttonAction = dialogView.findViewById(R.id.btn_action);
@@ -193,18 +188,50 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
                         )
                         .show();
             } else {
-                Toast.makeText(
-                                requireActivity(),
-                                "Saved successfully",
-                                Toast.LENGTH_SHORT
-                        )
-                        .show();
+
+                insertNewEmployee();
 
                 dialog.dismiss();
             }
 
         });
 
+    }
+
+    private void insertNewEmployee() {
+        String firstName = Objects.requireNonNull(tfFirstName.getEditText())
+                .getText().toString().trim();
+        String lastName = Objects.requireNonNull(tfLastName.getEditText())
+                .getText().toString().trim();
+        String dateOfBirth = Objects.requireNonNull(tfDateOfBirth.getEditText())
+                .getText().toString().trim();
+        String jobTitle = Objects.requireNonNull(tfJobTitle.getEditText())
+                .getText().toString().trim();
+        String salary = Objects.requireNonNull(tfSalary.getEditText())
+                .getText().toString().trim();
+        String hireDate = Objects.requireNonNull(tfHireDate.getEditText())
+                .getText().toString().trim();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(EmployeeHelperClass.COLUMN_FIRST_NAME, firstName);
+        dataList.put(EmployeeHelperClass.COLUMN_LAST_NAME, lastName);
+        dataList.put(EmployeeHelperClass.COLUMN_DATE_OF_BIRTH, dateOfBirth);
+        dataList.put(EmployeeHelperClass.COLUMN_JOB_TITLE, jobTitle);
+        dataList.put(EmployeeHelperClass.COLUMN_SALARY, salary);
+        dataList.put(EmployeeHelperClass.COLUMN_HIRE_DATE, hireDate);
+
+        mEmployeeRetirementDatabase.insertData(EmployeeHelperClass.TABLE_NAME, dataList);
+
+        refreshRecyclerViewData();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void refreshRecyclerViewData() {
+        employeeArrayList.clear();
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(EmployeeHelperClass.displayDataEmployeeTable());
+        listEmployees(mCursor);
+        employeeAdapter.notifyDataSetChanged();
     }
 
     private void pickDateFor(TextInputLayout mTextInput) {
@@ -230,6 +257,7 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         fabAddEmployee = mainView.findViewById(R.id.fab_add_new_employee);
         employeeRecyclerView = mainView.findViewById(R.id.rv_employee_list_view);
         searchViewEmployee = mainView.findViewById(R.id.search_view_employee);
+        mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
         searchViewEmployee.clearFocus();
     }
 
@@ -306,20 +334,14 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         buttonAction.setOnClickListener(view -> {
             if (!isFieldEmpty()) {
 
-                Toast.makeText(
-                                requireActivity(),
-                                "Updating data...",
-                                Toast.LENGTH_SHORT
-                        )
-                        .show();
-
+                updateEmployeeData(position);
                 updateDialog.dismiss();
 
             } else {
 
                 Toast.makeText(
                                 requireActivity(),
-                                "Meelaha banaan buuxi",
+                                "Fadlan buuxi meelaha banaan",
                                 Toast.LENGTH_SHORT
                         )
                         .show();
@@ -331,6 +353,39 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
 
     }
 
+    private void updateEmployeeData(int position) {
+        String firstName = Objects.requireNonNull(tfFirstName.getEditText())
+                .getText().toString().trim();
+        String lastName = Objects.requireNonNull(tfLastName.getEditText())
+                .getText().toString().trim();
+        String dateOfBirth = Objects.requireNonNull(tfDateOfBirth.getEditText())
+                .getText().toString().trim();
+        String jobTitle = Objects.requireNonNull(tfJobTitle.getEditText())
+                .getText().toString().trim();
+        String salary = Objects.requireNonNull(tfSalary.getEditText())
+                .getText().toString().trim();
+        String hireDate = Objects.requireNonNull(tfHireDate.getEditText())
+                .getText().toString().trim();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(EmployeeHelperClass.COLUMN_FIRST_NAME, firstName);
+        dataList.put(EmployeeHelperClass.COLUMN_LAST_NAME, lastName);
+        dataList.put(EmployeeHelperClass.COLUMN_DATE_OF_BIRTH, dateOfBirth);
+        dataList.put(EmployeeHelperClass.COLUMN_JOB_TITLE, jobTitle);
+        dataList.put(EmployeeHelperClass.COLUMN_SALARY, salary);
+        dataList.put(EmployeeHelperClass.COLUMN_HIRE_DATE, hireDate);
+
+        mEmployeeRetirementDatabase
+                .updateData(
+                        EmployeeHelperClass.TABLE_NAME,
+                        EmployeeHelperClass.COLUMN_ID,
+                        String.valueOf(employeeArrayList.get(position).getEmployeeId()),
+                        dataList
+                );
+
+        refreshRecyclerViewData();
+    }
+
     @Override
     public void onItemClick(int position) {
         createUpdateDialog(position);
@@ -338,6 +393,10 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
 
     @Override
     public void onItemLongClick(int position) {
+        deleteEmployee(position);
+    }
+
+    private void deleteEmployee(int position) {
         new MaterialAlertDialogBuilder(requireActivity())
                 .setTitle("Delete from list?")
                 .setMessage(
@@ -346,9 +405,16 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
                 )
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton("Delete", (dialogInterface, i) -> {
+
+                    mEmployeeRetirementDatabase.deleteById(
+                            EmployeeHelperClass.TABLE_NAME,
+                            EmployeeHelperClass.COLUMN_ID,
+                            String.valueOf(employeeArrayList.get(position).getEmployeeId())
+                    );
+
                     employeeArrayList.remove(position);
                     employeeAdapter.notifyItemRemoved(position);
-                    Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+
                     dialogInterface.dismiss();
                 })
                 .setCancelable(false)
