@@ -1,6 +1,7 @@
 package com.example.erismapp.activities;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,8 @@ import com.example.erismapp.fragments.HomeFragment;
 import com.example.erismapp.fragments.PayoutsFragment;
 import com.example.erismapp.fragments.RetirementBenefitFragment;
 import com.example.erismapp.fragments.RetirementPlanFragment;
+import com.example.erismapp.fragments.UserFragment;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -28,6 +31,19 @@ public class Dashboard extends AppCompatActivity {
         replaceFragment(new HomeFragment());
 
         selectingNavigationItems();
+
+        MaterialToolbar mTopAppBar = findViewById(R.id.topAppBar);
+
+        mTopAppBar.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.user_profile_menu) {
+                replaceFragment(new UserFragment());
+            }
+
+            return true;
+
+        });
 
     }
 
