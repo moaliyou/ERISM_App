@@ -2,40 +2,41 @@ package com.example.erismapp.models;
 
 public class RetirementBenefitModel {
 
-    private final String employeeName;
-    private final String benefitType;
-    private final double contributionAmount;
-    private final String contributionFrequency;
-    private final String retirementPlan;
-    private final String benefitStartDate;
-    private final String benefitEndDate;
+    private final int employeeId;
+    private String employeeName;
+    private String benefitType;
+    private int planId;
+    private double contributionAmount;
+    private String contributionFrequency;
+    private String benefitStartDate;
+    private String benefitEndDate;
     private int retirementBenefitId;
 
     public RetirementBenefitModel(
-            int retirementBenefitId, String employeeName, String benefitType,
-            double contributionAmount, String contributionFrequency, String retirementPlan,
-            String benefitStartDate, String benefitEndDate
+            int employeeId,
+            String employeeName
     ) {
-        this.retirementBenefitId = retirementBenefitId;
+        this.employeeId = employeeId;
         this.employeeName = employeeName;
-        this.benefitType = benefitType;
-        this.contributionAmount = contributionAmount;
-        this.contributionFrequency = contributionFrequency;
-        this.retirementPlan = retirementPlan;
-        this.benefitStartDate = benefitStartDate;
-        this.benefitEndDate = benefitEndDate;
     }
 
     public RetirementBenefitModel(
-            String employeeName, String benefitType,
-            double contributionAmount, String contributionFrequency, String retirementPlan,
-            String benefitStartDate, String benefitEndDate
+            int retirementBenefitId,
+            int employeeId,
+            String benefitType,
+            double contributionAmount,
+            String contributionFrequency,
+            int planId,
+            String benefitStartDate,
+            String benefitEndDate
+
     ) {
-        this.employeeName = employeeName;
+        this.retirementBenefitId = retirementBenefitId;
+        this.employeeId = employeeId;
         this.benefitType = benefitType;
         this.contributionAmount = contributionAmount;
         this.contributionFrequency = contributionFrequency;
-        this.retirementPlan = retirementPlan;
+        this.planId = planId;
         this.benefitStartDate = benefitStartDate;
         this.benefitEndDate = benefitEndDate;
     }
@@ -68,20 +69,16 @@ public class RetirementBenefitModel {
         return benefitEndDate;
     }
 
-    public String getRetirementPlan() {
-        return retirementPlan;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    @Override
-    public String toString() {
-        return "RetirementBenefitModel{" +
-                "retirementBenefitId=" + retirementBenefitId +
-                ", employeeName='" + employeeName + '\'' +
-                ", benefitType='" + benefitType + '\'' +
-                ", contributionAmount=" + contributionAmount +
-                ", contributionFrequency='" + contributionFrequency + '\'' +
-                ", benefitStartDate='" + benefitStartDate + '\'' +
-                ", benefitEndDate='" + benefitEndDate + '\'' +
-                '}';
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
     }
+
+    public int getPlanId() {
+        return planId;
+    }
+
 }
