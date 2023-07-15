@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,11 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.erismapp.R;
 import com.example.erismapp.adapters.RetirementPlanAdapter;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
-import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
-import com.example.erismapp.models.EmployeeModel;
 import com.example.erismapp.models.RetirementPlanModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,6 +40,7 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
     private RecyclerView retirementPlanRecyclerView;
     private RetirementPlanAdapter retirementPlanAdapter;
     private ArrayList<RetirementPlanModel> retirementPlanList;
+    private SearchView searchViewRetirementPlan;
     private TextInputLayout
             tfPlanName, tfPlanType, tfEmployerContributionRate,
             tfEmployeeContributionRate, tfVestingPeriod, tfMaxContributionLimit,
@@ -75,6 +76,7 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
         retirementPlanRecyclerView = mainView.findViewById(R.id.rv_retirement_plan);
         ivInboxIcon = mainView.findViewById(R.id.iv_inbox_icon);
         tvNoData = mainView.findViewById(R.id.tv_no_data);
+        searchViewRetirementPlan = mainView.findViewById(R.id.search_view_retirement_plan);
         mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
     }
 
@@ -82,6 +84,34 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
 
         fabAddRetirementPlan.setOnClickListener(view -> {
             createRegistrationDialog();
+        });
+
+        searchViewRetirementPlan.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterRetirementPlanList(newText);
+                return true;
+            }
+        });
+
+        retirementPlanRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (!(dy > 0)) {
+                    fabAddRetirementPlan.show();
+                    return;
+                }
+
+                fabAddRetirementPlan.hide();
+
+            }
         });
 
     }
@@ -172,6 +202,25 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
 
         mEmployeeRetirementDatabase.insertData(RetirementPlanHelperClass.TABLE_NAME, dataList);
         refreshRecyclerViewData();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void filterRetirementPlanList(String text) {
+        ArrayList<RetirementPlanModel> filteredRetirementPlanList = new ArrayList<>();
+        for (RetirementPlanModel plans :
+                retirementPlanList) {
+
+            if (
+                    plans.getPlanName().toLowerCase().contains(text.toLowerCase()) ||
+                            plans.getPlanType().toLowerCase().contains(text.toLowerCase())
+            ) {
+                filteredRetirementPlanList.add(plans);
+            }
+
+        }
+
+        retirementPlanAdapter.setFilteredList(filteredRetirementPlanList);
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
