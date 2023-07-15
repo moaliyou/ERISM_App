@@ -13,4 +13,5 @@
     <string name="string_tv_date_of_birth">Date of birth:</string>
     <string name="string_tv_salary">Salary: $</string>
     <string name="string_tv_hire_date">Hire date:</string>
+    <string name="warning_empty_fields_string">Fadlan buuxi meelaha banaan</string>
 </resources>

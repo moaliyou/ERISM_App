@@ -2,11 +2,14 @@ package com.example.erismapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -15,13 +18,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.erismapp.R;
 import com.example.erismapp.adapters.RetirementPlanAdapter;
+import com.example.erismapp.database.EmployeeRetirementDatabase;
+import com.example.erismapp.helpers.EmployeeHelperClass;
+import com.example.erismapp.helpers.MyHelperClass;
+import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
+import com.example.erismapp.models.EmployeeModel;
 import com.example.erismapp.models.RetirementPlanModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class RetirementPlanFragment extends Fragment implements RecyclerViewInterface {
@@ -35,24 +44,20 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
             tfPlanName, tfPlanType, tfEmployerContributionRate,
             tfEmployeeContributionRate, tfVestingPeriod, tfMaxContributionLimit,
             tfMinContributionLimit;
+    private TextView tvNoData;
+    private ImageView ivInboxIcon;
+    private EmployeeRetirementDatabase mEmployeeRetirementDatabase;
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainView = inflater.inflate(R.layout.fragment_retirement_plan, container, false);
 
-        retirementPlanDataView();
         initViews();
+        retirementPlanDataView();
         eventHandling();
-
-        return mainView;
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void initViews() {
-        fabAddRetirementPlan = mainView.findViewById(R.id.fab_retirement_benefit);
-        retirementPlanRecyclerView = mainView.findViewById(R.id.rv_retirement_plan);
 
         retirementPlanRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         retirementPlanRecyclerView.setHasFixedSize(true);
@@ -61,6 +66,16 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
         );
         retirementPlanRecyclerView.setAdapter(retirementPlanAdapter);
         retirementPlanAdapter.notifyDataSetChanged();
+
+        return mainView;
+    }
+
+    private void initViews() {
+        fabAddRetirementPlan = mainView.findViewById(R.id.fab_retirement_benefit);
+        retirementPlanRecyclerView = mainView.findViewById(R.id.rv_retirement_plan);
+        ivInboxIcon = mainView.findViewById(R.id.iv_inbox_icon);
+        tvNoData = mainView.findViewById(R.id.tv_no_data);
+        mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
     }
 
     private void eventHandling() {
@@ -69,6 +84,31 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
             createRegistrationDialog();
         });
 
+    }
+
+    private boolean isFieldEmpty() {
+        return (
+                Objects.requireNonNull(tfPlanName.getEditText())
+                        .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfPlanType.getEditText())
+                                .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfEmployerContributionRate.getEditText())
+                                .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfEmployeeContributionRate.getEditText())
+                                .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfVestingPeriod.getEditText())
+                                .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfMaxContributionLimit.getEditText())
+                                .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfMinContributionLimit.getEditText())
+                                .getText().toString().trim().isEmpty()
+        );
     }
 
     private void createRegistrationDialog() {
@@ -91,62 +131,97 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
         buttonCancel.setOnClickListener(view -> dialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            Toast.makeText(requireActivity(), "Saving data...", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+
+            if (!isFieldEmpty()) {
+                insertNewRetirementPlan();
+                dialog.dismiss();
+            } else {
+                MyHelperClass.showToastMessage(
+                        requireActivity(),
+                        getString(R.string.warning_empty_fields_string)
+                );
+            }
         });
 
+    }
+
+    private void insertNewRetirementPlan() {
+        String planName = Objects.requireNonNull(tfPlanName.getEditText())
+                .getText().toString().trim();
+        String planType = Objects.requireNonNull(tfPlanType.getEditText())
+                .getText().toString().trim();
+        String employerContributionRate = Objects.requireNonNull(tfEmployerContributionRate.getEditText())
+                .getText().toString().trim();
+        String employeeContributionRate = Objects.requireNonNull(tfEmployeeContributionRate.getEditText())
+                .getText().toString().trim();
+        String vestingPeriod = Objects.requireNonNull(tfVestingPeriod.getEditText())
+                .getText().toString().trim();
+        String maxContributionLimit = Objects.requireNonNull(tfMaxContributionLimit.getEditText())
+                .getText().toString().trim();
+        String minContributionLimit = Objects.requireNonNull(tfMinContributionLimit.getEditText())
+                .getText().toString().trim();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(RetirementPlanHelperClass.COLUMN_PLAN_NAME, planName);
+        dataList.put(RetirementPlanHelperClass.COLUMN_PLAN_TYPE, planType);
+        dataList.put(RetirementPlanHelperClass.COLUMN_EMPLOYER_CONTRIBUTION_RATE, employerContributionRate);
+        dataList.put(RetirementPlanHelperClass.COLUMN_EMPLOYEE_CONTRIBUTION_RATE, employeeContributionRate);
+        dataList.put(RetirementPlanHelperClass.COLUMN_VESTING_PERIOD, vestingPeriod);
+        dataList.put(RetirementPlanHelperClass.COLUMN_MAX_CONTRIBUTION_LIMIT, maxContributionLimit);
+        dataList.put(RetirementPlanHelperClass.COLUMN_MIN_CONTRIBUTION_LIMIT, minContributionLimit);
+
+        mEmployeeRetirementDatabase.insertData(RetirementPlanHelperClass.TABLE_NAME, dataList);
+        refreshRecyclerViewData();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void refreshRecyclerViewData() {
+
+        retirementPlanList.clear();
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(RetirementPlanHelperClass.displayDataRetirementPlanTable());
+
+        if (mCursor.getCount() != 0) {
+            ivInboxIcon.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
+            listRetirementPlans(mCursor);
+            retirementPlanAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+    private void listRetirementPlans(Cursor mCursor) {
+        while (mCursor.moveToNext()) {
+            retirementPlanList.add(
+                    new RetirementPlanModel(
+                            mCursor.getString(1),
+                            mCursor.getString(2),
+                            Double.parseDouble(mCursor.getString(3)),
+                            Double.parseDouble(mCursor.getString(4)),
+                            Integer.parseInt(mCursor.getString(5)),
+                            Double.parseDouble(mCursor.getString(6)),
+                            Double.parseDouble(mCursor.getString(7))
+                    )
+            );
+        }
     }
 
     private void retirementPlanDataView() {
         retirementPlanList = new ArrayList<>();
 
-        retirementPlanList.add(
-                new RetirementPlanModel(
-                        getResources().getStringArray(R.array.retirementPlans)[0],
-                        "Pension Payments",
-                        1.75,
-                        2.5,
-                        3,
-                        22500,
-                        5000
-                )
-        );
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(RetirementPlanHelperClass.displayDataRetirementPlanTable());
 
-        retirementPlanList.add(
-                new RetirementPlanModel(
-                        getResources().getStringArray(R.array.retirementPlans)[2],
-                        "Defined Contribution",
-                        4.75,
-                        8.5,
-                        6,
-                        15000,
-                        2000
-                )
-        );
+        if (mCursor.getCount() != 0) {
+            ivInboxIcon.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
+            listRetirementPlans(mCursor);
+            return;
+        }
 
-        retirementPlanList.add(
-                new RetirementPlanModel(
-                        getResources().getStringArray(R.array.retirementPlans)[1],
-                        "Pension Payments",
-                        2,
-                        5,
-                        2,
-                        10000,
-                        900
-                )
-        );
-
-        retirementPlanList.add(
-                new RetirementPlanModel(
-                        getResources().getStringArray(R.array.retirementPlans)[0],
-                        "Defined Benefit",
-                        4,
-                        9,
-                        4,
-                        25000,
-                        3000
-                )
-        );
+        ivInboxIcon.setVisibility(View.VISIBLE);
+        tvNoData.setVisibility(View.VISIBLE);
 
     }
 
