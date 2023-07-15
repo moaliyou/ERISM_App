@@ -11,7 +11,8 @@ public class RetirementPlanModel {
     private final double minContributionLimit;
 
     public RetirementPlanModel(
-            String planName, String planType,
+            String planName,
+            String planType,
             double employerContributionRate,
             double employeeContributionRate,
             int vestingPeriod,

@@ -22,6 +22,7 @@ import com.example.erismapp.R;
 import com.example.erismapp.adapters.EmployeeAdapter;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
 import com.example.erismapp.helpers.EmployeeHelperClass;
+import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.EmployeeModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -193,12 +194,10 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         buttonAction.setOnClickListener(view -> {
 
             if (isFieldEmpty()) {
-                Toast.makeText(
-                                requireActivity(),
-                                "Fadlan buuxi meelaha banaan",
-                                Toast.LENGTH_SHORT
-                        )
-                        .show();
+                MyHelperClass.showToastMessage(
+                        requireActivity(),
+                        getString(R.string.warning_empty_fields_string)
+                );
             } else {
 
                 insertNewEmployee();
@@ -360,14 +359,10 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
                 updateDialog.dismiss();
 
             } else {
-
-                Toast.makeText(
-                                requireActivity(),
-                                "Fadlan buuxi meelaha banaan",
-                                Toast.LENGTH_SHORT
-                        )
-                        .show();
-
+                MyHelperClass.showToastMessage(
+                        requireActivity(),
+                        getString(R.string.warning_empty_fields_string)
+                );
             }
 
         });

@@ -16,7 +16,7 @@
             android:padding="12dp">
 
             <TextView
-                android:id="@+id/tv_retirement_benefit_fragment_title"
+                android:id="@+id/tv_retirement_plan_fragment_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -27,6 +27,20 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view_retirement_plan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@drawable/search_background"
+                app:iconifiedByDefault="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_retirement_plan_fragment_title"
+                app:queryBackground="@android:color/transparent"
+                app:queryHint="Enter name..."
+                tools:layout_editor_absoluteY="12dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_retirement_benefit"
@@ -49,8 +63,34 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_retirement_benefit_fragment_title"
+                app:layout_constraintTop_toBottomOf="@id/search_view_retirement_plan"
                 tools:listitem="@layout/list_retirement_plan_layout" />
+
+            <ImageView
+                android:id="@+id/iv_inbox_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.3"
+                android:contentDescription="No data inbox"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/search_view_retirement_plan"
+                app:srcCompat="@drawable/ic_inbox" />
+
+            <TextView
+                android:id="@+id/tv_no_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:alpha="0.7"
+                android:text="No data"
+                android:textSize="18sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_inbox_icon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
