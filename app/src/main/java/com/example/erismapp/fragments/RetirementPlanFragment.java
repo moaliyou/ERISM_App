@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.erismapp.R;
 import com.example.erismapp.adapters.RetirementPlanAdapter;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
-import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
@@ -353,11 +352,56 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
         buttonCancel.setOnClickListener(view -> updateDialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            Toast.makeText(requireActivity(), "Updating data...", Toast.LENGTH_SHORT).show();
-            updateDialog.dismiss();
+
+            if (!isFieldEmpty()) {
+                updateRetirementPlanData(position);
+                updateDialog.dismiss();
+            } else {
+                MyHelperClass.showToastMessage(
+                        requireActivity(),
+                        getResources().getString(R.string.warning_empty_fields_string)
+                );
+            }
+
         });
 
 
+    }
+
+    private void updateRetirementPlanData(int position) {
+        String planName = Objects.requireNonNull(tfPlanName.getEditText())
+                .getText().toString().trim();
+        String planType = Objects.requireNonNull(tfPlanType.getEditText())
+                .getText().toString().trim();
+        String employerContributionRate = Objects.requireNonNull(tfEmployerContributionRate.getEditText())
+                .getText().toString().trim();
+        String employeeContributionRate = Objects.requireNonNull(tfEmployeeContributionRate.getEditText())
+                .getText().toString().trim();
+        String vestingPeriod = Objects.requireNonNull(tfVestingPeriod.getEditText())
+                .getText().toString().trim();
+        String maxContributionLimit = Objects.requireNonNull(tfMaxContributionLimit.getEditText())
+                .getText().toString().trim();
+        String minContributionLimit = Objects.requireNonNull(tfMinContributionLimit.getEditText())
+                .getText().toString().trim();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(RetirementPlanHelperClass.COLUMN_PLAN_NAME, planName);
+        dataList.put(RetirementPlanHelperClass.COLUMN_PLAN_TYPE, planType);
+        dataList.put(RetirementPlanHelperClass.COLUMN_EMPLOYER_CONTRIBUTION_RATE, employerContributionRate);
+        dataList.put(RetirementPlanHelperClass.COLUMN_EMPLOYEE_CONTRIBUTION_RATE, employeeContributionRate);
+        dataList.put(RetirementPlanHelperClass.COLUMN_VESTING_PERIOD, vestingPeriod);
+        dataList.put(RetirementPlanHelperClass.COLUMN_MAX_CONTRIBUTION_LIMIT, maxContributionLimit);
+        dataList.put(RetirementPlanHelperClass.COLUMN_MIN_CONTRIBUTION_LIMIT, minContributionLimit);
+
+        mEmployeeRetirementDatabase
+                .updateData(
+                        RetirementPlanHelperClass.TABLE_NAME,
+                        RetirementPlanHelperClass.COLUMN_ID,
+                        String.valueOf(retirementPlanList.get(position).getRetirementPlanId()),
+                        dataList
+                );
+
+        refreshRecyclerViewData();
     }
 
     private void deleteDataAt(int position) {
@@ -377,13 +421,12 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
                     );
 
                     retirementPlanList.remove(position);
+                    retirementPlanAdapter.notifyItemRemoved(position);
 
                     if (retirementPlanList.size() < 1) {
                         ivInboxIcon.setVisibility(View.VISIBLE);
                         tvNoData.setVisibility(View.VISIBLE);
                     }
-
-                    retirementPlanAdapter.notifyItemRemoved(position);
 
                     dialogInterface.dismiss();
                 })

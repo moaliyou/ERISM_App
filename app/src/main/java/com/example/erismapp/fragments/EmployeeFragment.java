@@ -430,13 +430,12 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
                     );
 
                     employeeArrayList.remove(position);
+                    employeeAdapter.notifyItemRemoved(position);
 
                     if (employeeArrayList.size() < 1) {
                         ivInboxIcon.setVisibility(View.VISIBLE);
                         tvNoData.setVisibility(View.VISIBLE);
                     }
-
-                    employeeAdapter.notifyItemRemoved(position);
 
                     dialogInterface.dismiss();
                 })
