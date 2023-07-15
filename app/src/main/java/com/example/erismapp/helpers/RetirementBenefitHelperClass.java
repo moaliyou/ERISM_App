@@ -19,11 +19,11 @@ public class RetirementBenefitHelperClass {
                 COLUMN_BENEFIT_TYPE + " TEXT NOT NULL, " +
                 COLUMN_PLAN_ID + " INTEGER NOT NULL, " +
                 COLUMN_CONTRIBUTION_AMOUNT + " REAL, " +
-                COLUMN_CONTRIBUTION_FREQUENCY + " TEXT NOT NULL,, " +
+                COLUMN_CONTRIBUTION_FREQUENCY + " TEXT NOT NULL, " +
                 COLUMN_BENEFIT_START_DATE + " TEXT NOT NULL, " +
-                COLUMN_BENEFIT_END_DATE + " TEXT NOT NULL " +
-                "FOREIGN KEY " + COLUMN_EMPLOYEE_ID +
-                " REFERENCES " + EmployeeHelperClass.TABLE_NAME + " " + COLUMN_EMPLOYEE_ID +
+                COLUMN_BENEFIT_END_DATE + " TEXT NOT NULL, " +
+                "FOREIGN KEY (" + COLUMN_EMPLOYEE_ID + ")" +
+                " REFERENCES " + EmployeeHelperClass.TABLE_NAME + " (" + COLUMN_EMPLOYEE_ID + ")" +
                 " ON UPDATE CASCADE " +
                 " ON DELETE CASCADE );";
     }
