@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.erismapp.R;
 import com.example.erismapp.adapters.RetirementPlanAdapter;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
+import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
@@ -244,6 +245,7 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
         while (mCursor.moveToNext()) {
             retirementPlanList.add(
                     new RetirementPlanModel(
+                            Integer.parseInt(mCursor.getString(0)),
                             mCursor.getString(1),
                             mCursor.getString(2),
                             Double.parseDouble(mCursor.getString(3)),
@@ -367,9 +369,22 @@ public class RetirementPlanFragment extends Fragment implements RecyclerViewInte
                 )
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton("Delete", (dialogInterface, i) -> {
+
+                    mEmployeeRetirementDatabase.deleteById(
+                            RetirementPlanHelperClass.TABLE_NAME,
+                            RetirementPlanHelperClass.COLUMN_ID,
+                            String.valueOf(retirementPlanList.get(position).getRetirementPlanId())
+                    );
+
                     retirementPlanList.remove(position);
+
+                    if (retirementPlanList.size() < 1) {
+                        ivInboxIcon.setVisibility(View.VISIBLE);
+                        tvNoData.setVisibility(View.VISIBLE);
+                    }
+
                     retirementPlanAdapter.notifyItemRemoved(position);
-                    Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+
                     dialogInterface.dismiss();
                 })
                 .setCancelable(false)

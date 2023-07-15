@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.erismapp.helpers.EmployeeHelperClass;
-import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.RetirementBenefitHelperClass;
 import com.example.erismapp.helpers.RetirementPlanHelperClass;
 
@@ -67,7 +66,6 @@ public class EmployeeRetirementDatabase extends SQLiteOpenHelper {
 
                 if (codeResult != -1) {
                     database.setTransactionSuccessful();
-                    MyHelperClass.showLongToastMessage(mContext, "Successfully inserted");
                 }
 
             }
@@ -135,17 +133,12 @@ public class EmployeeRetirementDatabase extends SQLiteOpenHelper {
     public void deleteById(String tableName, String columnConditionName, String idToDelete) {
         SQLiteDatabase database = this.getWritableDatabase();
 
-
-        long resultCode = database
+        database
                 .delete(
                         tableName,
                         columnConditionName + "=?",
                         new String[]{idToDelete}
                 );
-
-        if (resultCode != -1) {
-            MyHelperClass.showLongToastMessage(mContext, "Deleted successfully");
-        }
 
     }
 

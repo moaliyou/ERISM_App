@@ -2,6 +2,7 @@ package com.example.erismapp.models;
 
 public class RetirementPlanModel {
 
+    private final int retirementPlanId;
     private final String planName;
     private final String planType;
     private final double employerContributionRate;
@@ -11,6 +12,7 @@ public class RetirementPlanModel {
     private final double minContributionLimit;
 
     public RetirementPlanModel(
+            int retirementPlanId,
             String planName,
             String planType,
             double employerContributionRate,
@@ -19,6 +21,7 @@ public class RetirementPlanModel {
             double maxContributionLimit,
             double minContributionLimit
     ) {
+        this.retirementPlanId = retirementPlanId;
         this.planName = planName;
         this.planType = planType;
         this.employerContributionRate = employerContributionRate;
@@ -26,6 +29,10 @@ public class RetirementPlanModel {
         this.vestingPeriod = vestingPeriod;
         this.maxContributionLimit = maxContributionLimit;
         this.minContributionLimit = minContributionLimit;
+    }
+
+    public int getRetirementPlanId() {
+        return retirementPlanId;
     }
 
     public String getPlanName() {
