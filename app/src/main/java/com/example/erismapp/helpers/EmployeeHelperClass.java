@@ -32,7 +32,8 @@ public class EmployeeHelperClass {
     }
 
     public static String displayEmployeeNames() {
-        return "SELECT " + COLUMN_FIRST_NAME + " || ' ' || " + COLUMN_LAST_NAME + " FROM " + TABLE_NAME;
+        return "SELECT " + COLUMN_FIRST_NAME + " || ' ' || " + COLUMN_LAST_NAME +
+                " FROM " + TABLE_NAME;
     }
 
 

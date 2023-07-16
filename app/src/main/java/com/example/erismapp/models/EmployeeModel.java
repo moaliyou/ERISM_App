@@ -1,14 +1,16 @@
 package com.example.erismapp.models;
 
+import androidx.annotation.NonNull;
+
 public class EmployeeModel {
 
-    private int employeeId;
-    private String firstName;
-    private String lastName;
-    private String jobTitle;
-    private double salary;
-    private String dateOfBirth;
-    private String hireDate;
+    private final int employeeId;
+    private final String firstName;
+    private final String lastName;
+    private final String jobTitle;
+    private final String dateOfBirth;
+    private final String hireDate;
+    private final double salary;
 
     public EmployeeModel(
             int employeeId,
@@ -32,10 +34,6 @@ public class EmployeeModel {
         return employeeId;
     }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -44,50 +42,27 @@ public class EmployeeModel {
         return String.join(" ", getFirstName(), getLastName());
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getJobTitle() {
         return jobTitle;
     }
 
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
-    }
-
     public double getSalary() {
         return salary;
-    }
-
-    public void setSalary(double salary) {
-        this.salary = salary;
     }
 
     public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
     public String getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(String hireDate) {
-        this.hireDate = hireDate;
-    }
-
+    @NonNull
     @Override
     public String toString() {
         return "EmployeeModel{" +

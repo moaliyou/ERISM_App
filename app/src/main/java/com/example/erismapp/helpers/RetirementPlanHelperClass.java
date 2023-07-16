@@ -34,4 +34,7 @@ public class RetirementPlanHelperClass {
     }
 
 
+    public static String displayPlanNames() {
+        return "SELECT " + COLUMN_PLAN_NAME +" FROM " + TABLE_NAME;
+    }
 }
