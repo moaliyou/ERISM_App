@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import com.example.erismapp.R;
 import com.example.erismapp.adapters.RetirementBenefitAdapter;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
 import com.example.erismapp.helpers.EmployeeHelperClass;
+import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.RetirementBenefitModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -52,6 +54,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             rbPensionPayment, rbSocialSecurity, rbHealthInsurance, rbLifeInsurance;
     private RecyclerView retirementBenefitRecyclerView;
     private RetirementBenefitAdapter retirementBenefitAdapter;
+    ArrayAdapter<String> employeeNamesAdapter;
     private ArrayList<RetirementBenefitModel> retirementBenefitList;
     private List<String> employeeNameList, contributionFrequencyList, retirementPlanList;
 
@@ -120,7 +123,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
         listEmployeeNames(mCursor);
 
-        ArrayAdapter<String> employeeNamesAdapter =
+        employeeNamesAdapter =
                 new ArrayAdapter<>(
                         requireContext(),
                         R.layout.dropdown_items,
@@ -152,6 +155,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             setEmployeeNames();
             setContributionFrequency();
             setRetirementPlans();
+            findingSelectedEmployeeId();
         });
 
         searchViewRetirementBenefit.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -182,6 +186,15 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             }
         });
 
+    }
+
+    private void findingSelectedEmployeeId() {
+        drdEmployeeNames.setOnItemClickListener((parent, view, position, id) -> {
+            MyHelperClass.showToastMessage(
+                    view.getContext(),
+                    parent.getItemAtPosition(position).toString()
+            );
+        });
     }
 
     private void filterRetirementBenefitList(String text) {
