@@ -43,6 +43,7 @@ import java.util.Objects;
 
 public class RetirementBenefitFragment extends Fragment implements RecyclerViewInterface {
 
+    ArrayAdapter<String> employeeNamesAdapter;
     private View mainView;
     private FloatingActionButton fabAddRetirementBenefit;
     private SearchView searchViewRetirementBenefit;
@@ -54,7 +55,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             rbPensionPayment, rbSocialSecurity, rbHealthInsurance, rbLifeInsurance;
     private RecyclerView retirementBenefitRecyclerView;
     private RetirementBenefitAdapter retirementBenefitAdapter;
-    ArrayAdapter<String> employeeNamesAdapter;
     private ArrayList<RetirementBenefitModel> retirementBenefitList;
     private List<String> employeeNameList, contributionFrequencyList, retirementPlanList;
 
@@ -104,14 +104,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     private void listEmployeeNames(Cursor mCursor) {
         while (mCursor.moveToNext()) {
-            employeeNameList
-                    .add(
-                            String.format(
-                                    "%s %s",
-                                    mCursor.getString(1),
-                                    mCursor.getString(2)
-                            )
-                    );
+            employeeNameList.add(mCursor.getString(0));
         }
     }
 
@@ -119,7 +112,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         employeeNameList = new ArrayList<>();
 
         Cursor mCursor = mEmployeeRetirementDatabase
-                .readDataFrom(EmployeeHelperClass.displayDataEmployeeTable());
+                .readDataFrom(EmployeeHelperClass.displayEmployeeNames());
 
         listEmployeeNames(mCursor);
 
