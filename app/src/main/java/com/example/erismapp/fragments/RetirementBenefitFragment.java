@@ -26,6 +26,7 @@ import com.example.erismapp.adapters.RetirementBenefitAdapter;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
 import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.helpers.MyHelperClass;
+import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.RetirementBenefitModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -57,6 +58,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private RetirementBenefitAdapter retirementBenefitAdapter;
     private ArrayList<RetirementBenefitModel> retirementBenefitList;
     private List<String> employeeNameList, contributionFrequencyList, retirementPlanList;
+    private String planId, employeeId, contributionFrequency;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,6 +151,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             setContributionFrequency();
             setRetirementPlans();
             findingSelectedEmployeeId();
+            findingSelectedPlanId();
         });
 
         searchViewRetirementBenefit.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -184,11 +187,11 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private void findingSelectedEmployeeId() {
         drdEmployeeNames.setOnItemClickListener((parent, view, position, id) -> {
             String selectEmployee = parent.getItemAtPosition(position).toString();
-            String employeeId = "";
+            employeeId = "";
 
             Cursor mCursor = mEmployeeRetirementDatabase
                     .readDataFrom(
-                           EmployeeHelperClass.getEmployeeId(selectEmployee)
+                            EmployeeHelperClass.getEmployeeId(selectEmployee)
                     );
 
             if (mCursor.moveToFirst()) {
@@ -198,6 +201,27 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             MyHelperClass.showToastMessage(
                     view.getContext(),
                     employeeId
+            );
+        });
+    }
+
+    private void findingSelectedPlanId() {
+        drdRetirementPlans.setOnItemClickListener((parent, view, position, id) -> {
+            String selectPlan = parent.getItemAtPosition(position).toString();
+            planId = "";
+
+            Cursor mCursor = mEmployeeRetirementDatabase
+                    .readDataFrom(
+                            RetirementPlanHelperClass.getPlanId(selectPlan)
+                    );
+
+            if (mCursor.moveToFirst()) {
+                planId = mCursor.getString(0);
+            }
+
+            MyHelperClass.showToastMessage(
+                    view.getContext(),
+                    planId
             );
         });
     }
