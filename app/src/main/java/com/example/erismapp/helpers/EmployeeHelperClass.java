@@ -36,5 +36,11 @@ public class EmployeeHelperClass {
                 " FROM " + TABLE_NAME;
     }
 
+    public static String getEmployeeId(String fullName) {
+        return "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_FIRST_NAME + " || ' ' || " + COLUMN_LAST_NAME +
+                " = '" + fullName + "';";
+    }
+
 
 }

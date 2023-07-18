@@ -183,9 +183,21 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     private void findingSelectedEmployeeId() {
         drdEmployeeNames.setOnItemClickListener((parent, view, position, id) -> {
+            String selectEmployee = parent.getItemAtPosition(position).toString();
+            String employeeId = "";
+
+            Cursor mCursor = mEmployeeRetirementDatabase
+                    .readDataFrom(
+                           EmployeeHelperClass.getEmployeeId(selectEmployee)
+                    );
+
+            if (mCursor.moveToFirst()) {
+                employeeId = mCursor.getString(0);
+            }
+
             MyHelperClass.showToastMessage(
                     view.getContext(),
-                    parent.getItemAtPosition(position).toString()
+                    employeeId
             );
         });
     }
