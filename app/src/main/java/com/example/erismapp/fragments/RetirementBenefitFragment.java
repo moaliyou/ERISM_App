@@ -44,7 +44,7 @@ import java.util.Objects;
 
 public class RetirementBenefitFragment extends Fragment implements RecyclerViewInterface {
 
-    ArrayAdapter<String> employeeNamesAdapter;
+    ArrayAdapter<String> employeeNamesAdapter, retirementPlanAdapter;
     private View mainView;
     private FloatingActionButton fabAddRetirementBenefit;
     private SearchView searchViewRetirementBenefit;
@@ -129,9 +129,14 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     }
 
     private void setRetirementPlans() {
-        retirementPlanList = Arrays.asList(getResources().getStringArray(R.array.retirementPlans));
+        retirementPlanList = new ArrayList<>();
 
-        ArrayAdapter<String> retirementPlanAdapter =
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(RetirementPlanHelperClass.displayDataRetirementPlanTable());
+
+        listPlanNames(mCursor);
+
+        retirementPlanAdapter =
                 new ArrayAdapter<>(
                         requireContext(),
                         R.layout.dropdown_items,
@@ -139,6 +144,12 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
                 );
 
         drdRetirementPlans.setAdapter(retirementPlanAdapter);
+    }
+
+    private void listPlanNames(Cursor mCursor) {
+        while (mCursor.moveToNext()) {
+            retirementPlanList.add(mCursor.getString(1));
+        }
     }
 
     private void eventHandling() {
