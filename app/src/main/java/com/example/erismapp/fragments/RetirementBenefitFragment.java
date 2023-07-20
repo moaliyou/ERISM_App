@@ -58,7 +58,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private RetirementBenefitAdapter retirementBenefitAdapter;
     private ArrayList<RetirementBenefitModel> retirementBenefitList;
     private List<String> employeeNameList, contributionFrequencyList, retirementPlanList;
-    private String planId, employeeId, contributionFrequency;
+    private String planId, employeeId, selectedContributionFrequency;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -163,6 +163,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             setRetirementPlans();
             findingSelectedEmployeeId();
             findingSelectedPlanId();
+            findingSelectedContributionFrequency();
         });
 
         searchViewRetirementBenefit.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -193,6 +194,16 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             }
         });
 
+    }
+
+    private void findingSelectedContributionFrequency() {
+        drdContributionFrequency.setOnItemClickListener((parent, view, position, id) -> {
+            selectedContributionFrequency = parent.getItemAtPosition(position).toString();
+            MyHelperClass.showToastMessage(
+                    view.getContext(),
+                    selectedContributionFrequency
+            );
+        });
     }
 
     private void findingSelectedEmployeeId() {
