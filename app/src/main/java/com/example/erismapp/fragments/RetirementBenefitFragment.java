@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -288,8 +287,17 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         buttonCancel.setOnClickListener(view -> dialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            Toast.makeText(requireActivity(), "Saving data...", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+
+            if (!isFieldEmpty()) {
+                MyHelperClass.showToastMessage(requireActivity(), "Successfully inserted");
+                dialog.dismiss();
+            } else {
+                MyHelperClass.showToastMessage(
+                        requireActivity(),
+                        getResources().getString(R.string.warning_empty_fields_string)
+                );
+            }
+
         });
 
     }
@@ -406,6 +414,26 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
                 })
                 .setCancelable(false)
                 .show();
+    }
+
+    private boolean isFieldEmpty() {
+        return (
+                Objects.requireNonNull(tfContributionAmount.getEditText())
+                        .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfBenefitStartDate.getEditText())
+                                .getText().toString().equals(
+                                        getResources().getString(R.string.string_date_format)) ||
+
+                        Objects.requireNonNull(tfBenefitEndDate.getEditText())
+                                .getText().toString().equals(
+                                        getResources().getString(R.string.string_date_format)) ||
+
+                        rgBenefitType.getCheckedRadioButtonId() == -1 ||
+                        drdEmployeeNames.getText().toString().trim().isEmpty() ||
+                        drdContributionFrequency.getText().toString().trim().isEmpty() ||
+                        drdRetirementPlans.getText().toString().trim().isEmpty()
+        );
     }
 
     @Override
