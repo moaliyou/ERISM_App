@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,8 +27,10 @@ import com.example.erismapp.adapters.RetirementBenefitAdapter;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
 import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.helpers.MyHelperClass;
+import com.example.erismapp.helpers.RetirementBenefitHelperClass;
 import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
+import com.example.erismapp.models.EmployeeModel;
 import com.example.erismapp.models.RetirementBenefitModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -37,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -57,7 +62,9 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private RetirementBenefitAdapter retirementBenefitAdapter;
     private ArrayList<RetirementBenefitModel> retirementBenefitList;
     private List<String> employeeNameList, contributionFrequencyList, retirementPlanList;
-    private String planId, employeeId, selectedContributionFrequency;
+    private String planId, employeeId, selectedContributionFrequency, selectedBenefitType;
+    private TextView tvNoData;
+    private ImageView ivInboxIcon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,6 +84,8 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         fabAddRetirementBenefit = mainView.findViewById(R.id.fab_retirement_benefit);
         retirementBenefitRecyclerView = mainView.findViewById(R.id.rv_retirement_benefit);
         searchViewRetirementBenefit = mainView.findViewById(R.id.search_view_retirement_benefit);
+        ivInboxIcon = mainView.findViewById(R.id.iv_inbox_icon);
+        tvNoData = mainView.findViewById(R.id.tv_no_data);
         mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
 
         retirementBenefitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -86,6 +95,8 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         );
         retirementBenefitRecyclerView.setAdapter(retirementBenefitAdapter);
         retirementBenefitAdapter.notifyDataSetChanged();
+
+        searchViewRetirementBenefit.clearFocus();
     }
 
     private void setContributionFrequency() {
@@ -247,6 +258,13 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         });
     }
 
+    private void findingSelectedBenefitType(View view) {
+        rgBenefitType.setOnCheckedChangeListener((group, checkedId) -> {
+            rbSelectedBenefitType = view.findViewById(checkedId);
+            selectedBenefitType = rbSelectedBenefitType.getText().toString();
+        });
+    }
+
     private void filterRetirementBenefitList(String text) {
         ArrayList<RetirementBenefitModel> filteredRetirementBenefitList = new ArrayList<>();
         for (RetirementBenefitModel retirementBenefit :
@@ -284,12 +302,17 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         dialog.setCancelable(false);
         dialog.show();
 
+        findingSelectedBenefitType(dialogView);
+
         buttonCancel.setOnClickListener(view -> dialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
 
             if (!isFieldEmpty()) {
-                MyHelperClass.showToastMessage(requireActivity(), "Successfully inserted");
+                MyHelperClass.showToastMessage(
+                        requireActivity(),
+                        "Successfully inserted | " + selectedBenefitType
+                );
                 dialog.dismiss();
             } else {
                 MyHelperClass.showToastMessage(
@@ -300,6 +323,56 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
         });
 
+    }
+
+    private void insertNewRetirementBenefit() {
+        String contributionAmount = Objects.requireNonNull(tfContributionAmount.getEditText())
+                .getText().toString().trim();
+        String benefitStartDate = Objects.requireNonNull(tfBenefitStartDate.getEditText())
+                .getText().toString().trim();
+        String benefitEndDate = Objects.requireNonNull(tfBenefitEndDate.getEditText())
+                .getText().toString().trim();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(RetirementBenefitHelperClass.COLUMN_EMPLOYEE_ID, employeeId);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_BENEFIT_TYPE, selectedBenefitType);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_CONTRIBUTION_AMOUNT, contributionAmount);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_CONTRIBUTION_FREQUENCY, selectedContributionFrequency);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_PLAN_ID, planId);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_BENEFIT_START_DATE, benefitStartDate);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_BENEFIT_END_DATE, benefitEndDate);
+
+        mEmployeeRetirementDatabase.insertData(RetirementBenefitHelperClass.TABLE_NAME, dataList);
+
+        refreshRecyclerViewData();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void refreshRecyclerViewData() {
+
+        retirementBenefitList.clear();
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(EmployeeHelperClass.displayDataEmployeeTable());
+
+        if (mCursor.getCount() != 0) {
+            ivInboxIcon.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
+            listRetirementBenefits(mCursor);
+            retirementBenefitAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+    private void listRetirementBenefits(Cursor mCursor) {
+        while (mCursor.moveToNext()) {
+            retirementBenefitList.add(
+                    new RetirementBenefitModel(
+                            Integer.parseInt(mCursor.getString(0)),
+                            mCursor.getString(1)
+                    )
+            );
+        }
     }
 
     private void initDialogViews(View view) {
@@ -315,8 +388,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         rbHealthInsurance = view.findViewById(R.id.rb_health_insurance_type);
         rbLifeInsurance = view.findViewById(R.id.rb_life_insurance_type);
 
-        int checkedRadioButtonId = rgBenefitType.getCheckedRadioButtonId();
-        rbSelectedBenefitType = view.findViewById(checkedRadioButtonId);
     }
 
     private void retirementBenefitDataView() {
