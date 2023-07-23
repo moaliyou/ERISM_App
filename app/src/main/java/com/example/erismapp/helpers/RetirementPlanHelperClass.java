@@ -42,4 +42,10 @@ public class RetirementPlanHelperClass {
         return "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME +
                 " WHERE " + COLUMN_PLAN_NAME + " = '" + selectPlan + "';";
     }
+
+    public static String getPlanName(String planId) {
+        return "SELECT " + COLUMN_PLAN_NAME + " FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_ID + " = " + planId + ";";
+    }
+
 }

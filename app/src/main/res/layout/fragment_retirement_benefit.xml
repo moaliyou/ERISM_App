@@ -39,7 +39,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_retirement_benefit_fragment_title"
                 app:queryBackground="@android:color/transparent"
-                app:queryHint="Enter name..."
+                app:queryHint="Search by employee name"
                 tools:layout_editor_absoluteY="12dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -65,6 +65,32 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_view_retirement_benefit"
                 tools:listitem="@layout/list_retirement_benefit_layout" />
+
+            <ImageView
+                android:id="@+id/iv_inbox_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.3"
+                android:contentDescription="No data inbox"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/search_view_retirement_benefit"
+                app:srcCompat="@drawable/ic_inbox" />
+
+            <TextView
+                android:id="@+id/tv_no_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:alpha="0.7"
+                android:text="No data"
+                android:textSize="18sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_inbox_icon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
