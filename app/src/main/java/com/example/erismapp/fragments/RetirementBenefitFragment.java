@@ -211,10 +211,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private void findingSelectedContributionFrequency() {
         drdContributionFrequency.setOnItemClickListener((parent, view, position, id) -> {
             selectedContributionFrequency = parent.getItemAtPosition(position).toString();
-            MyHelperClass.showToastMessage(
-                    view.getContext(),
-                    selectedContributionFrequency
-            );
         });
     }
 
@@ -408,7 +404,9 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         retirementBenefitList = new ArrayList<>();
 
         Cursor mCursor = mEmployeeRetirementDatabase
-                .readDataFrom(RetirementBenefitHelperClass.displayDataRetirementBenefitTable());
+                .readDataFrom(
+                        RetirementBenefitHelperClass.displayDataRetirementBenefitTable()
+                );
 
         if (mCursor.getCount() != 0) {
             ivInboxIcon.setVisibility(View.GONE);
@@ -453,11 +451,16 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
             rbLifeInsurance.setChecked(true);
         }
 
+        selectedBenefitType = retirementBenefitList.get(position).getBenefitType();
+
         Objects.requireNonNull(tfContributionAmount.getEditText())
                 .setText(String.valueOf(retirementBenefitList.get(position).getContributionAmount()));
 
         Objects.requireNonNull(drdContributionFrequency)
                 .setText(retirementBenefitList.get(position).getContributionFrequency());
+
+        Objects.requireNonNull(drdRetirementPlans)
+                .setText(retirementBenefitList.get(position).getPlanName());
 
         Objects.requireNonNull(tfBenefitStartDate.getEditText())
                 .setText(String.valueOf(retirementBenefitList.get(position).getBenefitStartDate()));
@@ -474,7 +477,11 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_retirement_benefit, null);
         initDialogViews(dialogView);
 
-        setUpdatableRetirementBenefitData(position);
+        setEmployeeNames();
+        setContributionFrequency();
+        setRetirementPlans();
+
+//        setUpdatableRetirementBenefitData(position);
 
         Button buttonCancel, buttonAction;
         buttonCancel = dialogView.findViewById(R.id.btn_cancel);
@@ -489,11 +496,47 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         buttonCancel.setOnClickListener(view -> updateDialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            Toast.makeText(requireActivity(), "Updating data...", Toast.LENGTH_SHORT).show();
-            updateDialog.dismiss();
+            if (!isFieldEmpty()) {
+
+                updateRetirementBenefitData(position);
+                updateDialog.dismiss();
+
+            } else {
+                MyHelperClass.showToastMessage(
+                        requireActivity(),
+                        getString(R.string.warning_empty_fields_string)
+                );
+            }
         });
 
+    }
 
+    private void updateRetirementBenefitData(int position) {
+        String contributionAmount = Objects.requireNonNull(tfContributionAmount.getEditText())
+                .getText().toString().trim();
+        String benefitStartDate = Objects.requireNonNull(tfBenefitStartDate.getEditText())
+                .getText().toString().trim();
+        String benefitEndDate = Objects.requireNonNull(tfBenefitEndDate.getEditText())
+                .getText().toString().trim();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(RetirementBenefitHelperClass.COLUMN_EMPLOYEE_ID, employeeId);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_BENEFIT_TYPE, selectedBenefitType);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_CONTRIBUTION_AMOUNT, contributionAmount);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_CONTRIBUTION_FREQUENCY, selectedContributionFrequency);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_PLAN_ID, planId);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_BENEFIT_START_DATE, benefitStartDate);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_BENEFIT_END_DATE, benefitEndDate);
+
+        mEmployeeRetirementDatabase
+                .updateData(
+                        RetirementBenefitHelperClass.TABLE_NAME,
+                        RetirementBenefitHelperClass.COLUMN_ID,
+                        String.valueOf(retirementBenefitList.get(position).getEmployeeId()),
+                        dataList
+                );
+
+        refreshRecyclerViewData();
     }
 
     private void deleteDataAt(int position) {

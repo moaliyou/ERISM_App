@@ -7,11 +7,20 @@ public class UserModel {
     private String fullName;
     private String password;
 
-    public UserModel(int userId, String username, String fullName, String password) {
+    public UserModel(int userId, String username, String fullName) {
         this.userId = userId;
         this.username = username;
         this.fullName = fullName;
-        this.password = password;
+    }
+
+    public UserModel(){}
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public int getUserId() {

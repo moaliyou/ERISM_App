@@ -1,5 +1,6 @@
 package com.example.erismapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -33,6 +34,10 @@ public class Dashboard extends AppCompatActivity {
         selectingNavigationItems();
 
         MaterialToolbar mTopAppBar = findViewById(R.id.topAppBar);
+
+        Intent mIntent = getIntent();
+
+        mTopAppBar.setTitle(mIntent.getStringExtra(LoginActivity.EXTRA_FULL_NAME));
 
         mTopAppBar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();

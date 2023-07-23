@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.helpers.RetirementBenefitHelperClass;
 import com.example.erismapp.helpers.RetirementPlanHelperClass;
+import com.example.erismapp.helpers.UserHelperClass;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class EmployeeRetirementDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(EmployeeHelperClass.createEmployeeTable());
         sqLiteDatabase.execSQL(RetirementBenefitHelperClass.createRetirementBenefitTable());
+        sqLiteDatabase.execSQL(UserHelperClass.createUserTable());
         sqLiteDatabase.execSQL(RetirementPlanHelperClass.createRetirementPlanTable());
     }
 

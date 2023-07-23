@@ -8,13 +8,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.erismapp.R;
+import com.example.erismapp.database.EmployeeRetirementDatabase;
+import com.example.erismapp.helpers.EmployeeHelperClass;
+import com.example.erismapp.helpers.UserHelperClass;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class SignupActivity extends AppCompatActivity {
 
     private TextInputLayout tfUsername, tfPassword, tfConfirm, tfFullName;
+    private EmployeeRetirementDatabase mEmployeeRetirementDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,7 @@ public class SignupActivity extends AppCompatActivity {
         tfUsername = findViewById(R.id.tf_username_layout);
         tfPassword = findViewById(R.id.tf_password_layout);
         tfConfirm = findViewById(R.id.tf_confirm_layout);
+        mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(this);
     }
 
     private boolean isFieldEmpty() {
@@ -63,7 +69,8 @@ public class SignupActivity extends AppCompatActivity {
         if (!isFieldEmpty()) {
 
             if (confirmPassword.equals(password)) {
-                Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show();
+                insertNewUser();
+                login(view);
             } else {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             }
@@ -71,6 +78,26 @@ public class SignupActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Fadlan buuxi meelaha banaan", Toast.LENGTH_SHORT).show();
         }
+
+    }
+
+    private void insertNewUser() {
+
+        String fullName = Objects.requireNonNull(tfFullName.getEditText())
+                .getText().toString().trim();
+
+        String username = Objects.requireNonNull(tfUsername.getEditText())
+                .getText().toString().trim();
+
+        String password = Objects.requireNonNull(tfPassword.getEditText())
+                .getText().toString().trim();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(UserHelperClass.COLUMN_FULL_NAME, fullName);
+        dataList.put(UserHelperClass.COLUMN_USERNAME, username);
+        dataList.put(UserHelperClass.COLUMN_PASSWORD, password);
+
+        mEmployeeRetirementDatabase.insertData(UserHelperClass.TABLE_NAME, dataList);
 
     }
 }

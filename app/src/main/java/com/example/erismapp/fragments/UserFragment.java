@@ -1,31 +1,36 @@
 package com.example.erismapp.fragments;
 
 import android.annotation.SuppressLint;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.erismapp.R;
+import com.example.erismapp.activities.Dashboard;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
+import com.example.erismapp.helpers.MyHelperClass;
+import com.example.erismapp.helpers.UserHelperClass;
 import com.example.erismapp.models.UserModel;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class UserFragment extends Fragment {
 
-    ArrayList<UserModel> userArrayList;
     private View mainView;
+    private MaterialToolbar toolbar;
     private TextInputLayout tfUserFullName, tfUsername,
             tfNewPassword, tfConfirm;
     private Button btnSaveChanges;
     private EmployeeRetirementDatabase mEmployeeRetirementDatabase;
+    private UserModel userModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,16 +44,75 @@ public class UserFragment extends Fragment {
         return mainView;
     }
 
+    private void fillUserData(String fullName) {
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(UserHelperClass.getUserDate(fullName));
+
+        if (mCursor.moveToFirst()) {
+
+            userModel.setUserId(Integer.parseInt(mCursor.getString(0)));
+            Objects.requireNonNull(tfUserFullName.getEditText()).setText(mCursor.getString(2));
+            Objects.requireNonNull(tfUsername.getEditText()).setText(mCursor.getString(1));
+
+        }
+
+    }
+
     private void eventHandling() {
         btnSaveChanges.setOnClickListener(view -> {
 
             if (!isFieldEmpty()) {
-                Toast.makeText(requireActivity(), "Update user data", Toast.LENGTH_SHORT).show();
+                if (!isPasswordsMatch()) {
+                    MyHelperClass.showToastMessage(
+                            requireActivity(),
+                            "Passwords do not match"
+                    );
+                } else {
+                    saveUserChanges();
+                }
             } else {
-                Toast.makeText(requireActivity(), "fadlan buuxi meelaha banaan", Toast.LENGTH_SHORT).show();
+                MyHelperClass.showToastMessage(
+                        requireActivity(),
+                        getResources().getString(R.string.warning_empty_fields_string)
+                );
             }
 
         });
+    }
+
+    private void saveUserChanges() {
+        String userFullName = Objects
+                .requireNonNull(tfUserFullName.getEditText())
+                .getText().toString();
+
+        String username = Objects
+                .requireNonNull(tfUsername.getEditText())
+                .getText().toString();
+
+        String newPassword = Objects
+                .requireNonNull(tfNewPassword.getEditText())
+                .getText().toString();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(UserHelperClass.COLUMN_USERNAME, username);
+        dataList.put(UserHelperClass.COLUMN_FULL_NAME, userFullName);
+        dataList.put(UserHelperClass.COLUMN_PASSWORD, newPassword);
+
+        mEmployeeRetirementDatabase
+                .updateData(
+                        UserHelperClass.TABLE_NAME,
+                        UserHelperClass.COLUMN_ID,
+                        String.valueOf(userModel.getUserId()),
+                        dataList
+                );
+
+        toolbar.setTitle(userFullName);
+
+    }
+
+    private boolean isPasswordsMatch() {
+        return Objects.requireNonNull(tfNewPassword.getEditText()).getText().toString()
+                .equals(Objects.requireNonNull(tfConfirm.getEditText()).getText().toString());
     }
 
     @SuppressLint("InflateParams")
@@ -59,6 +123,13 @@ public class UserFragment extends Fragment {
         tfConfirm = mainView.findViewById(R.id.tf_confirm_password);
         btnSaveChanges = mainView.findViewById(R.id.btn_save_changes);
         mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
+        userModel = new UserModel();
+
+        toolbar = ((Dashboard) requireActivity())
+                .findViewById(R.id.topAppBar);
+
+        fillUserData(toolbar.getTitle().toString());
+
     }
 
     private boolean isFieldEmpty() {
