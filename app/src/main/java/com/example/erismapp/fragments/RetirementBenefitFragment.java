@@ -66,27 +66,16 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private TextView tvNoData;
     private ImageView ivInboxIcon;
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainView = inflater.inflate(R.layout.fragment_retirement_benefit, container, false);
 
-        retirementBenefitDataView();
         initViews();
-        eventHandling();
 
-        return mainView;
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void initViews() {
-        fabAddRetirementBenefit = mainView.findViewById(R.id.fab_retirement_benefit);
-        retirementBenefitRecyclerView = mainView.findViewById(R.id.rv_retirement_benefit);
-        searchViewRetirementBenefit = mainView.findViewById(R.id.search_view_retirement_benefit);
-        ivInboxIcon = mainView.findViewById(R.id.iv_inbox_icon);
-        tvNoData = mainView.findViewById(R.id.tv_no_data);
-        mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
+        retirementBenefitDataView();
 
         retirementBenefitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         retirementBenefitRecyclerView.setHasFixedSize(true);
@@ -95,6 +84,19 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         );
         retirementBenefitRecyclerView.setAdapter(retirementBenefitAdapter);
         retirementBenefitAdapter.notifyDataSetChanged();
+
+        eventHandling();
+
+        return mainView;
+    }
+
+    private void initViews() {
+        fabAddRetirementBenefit = mainView.findViewById(R.id.fab_retirement_benefit);
+        retirementBenefitRecyclerView = mainView.findViewById(R.id.rv_retirement_benefit);
+        searchViewRetirementBenefit = mainView.findViewById(R.id.search_view_retirement_benefit);
+        ivInboxIcon = mainView.findViewById(R.id.iv_inbox_icon);
+        tvNoData = mainView.findViewById(R.id.tv_no_data);
+        mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
 
         searchViewRetirementBenefit.clearFocus();
     }
@@ -309,6 +311,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         buttonAction.setOnClickListener(view -> {
 
             if (!isFieldEmpty()) {
+                insertNewRetirementBenefit();
                 MyHelperClass.showToastMessage(
                         requireActivity(),
                         "Successfully inserted | " + selectedBenefitType
@@ -353,7 +356,7 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         retirementBenefitList.clear();
 
         Cursor mCursor = mEmployeeRetirementDatabase
-                .readDataFrom(EmployeeHelperClass.displayDataEmployeeTable());
+                .readDataFrom(RetirementBenefitHelperClass.displayDataRetirementBenefitTable());
 
         if (mCursor.getCount() != 0) {
             ivInboxIcon.setVisibility(View.GONE);
@@ -366,10 +369,33 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     private void listRetirementBenefits(Cursor mCursor) {
         while (mCursor.moveToNext()) {
+            String employeeName = "", planName = "";
+
+            Cursor planCursor = mEmployeeRetirementDatabase
+                    .readDataFrom(
+                            RetirementPlanHelperClass.getPlanName(mCursor.getString(3))
+                    );
+
+            Cursor employeeCursor = mEmployeeRetirementDatabase
+                    .readDataFrom(
+                            EmployeeHelperClass.getEmployeeName(mCursor.getString(1))
+                    );
+
+            if (planCursor.moveToFirst() && employeeCursor.moveToFirst()) {
+                employeeName = employeeCursor.getString(0);
+                planName = planCursor.getString(0);
+            }
+
             retirementBenefitList.add(
                     new RetirementBenefitModel(
                             Integer.parseInt(mCursor.getString(0)),
-                            mCursor.getString(1)
+                            employeeName,
+                            mCursor.getString(2),
+                            Double.parseDouble(mCursor.getString(4)),
+                            mCursor.getString(5),
+                            planName,
+                            mCursor.getString(6),
+                            mCursor.getString(7)
                     )
             );
         }
@@ -392,6 +418,19 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
     private void retirementBenefitDataView() {
         retirementBenefitList = new ArrayList<>();
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(RetirementBenefitHelperClass.displayDataRetirementBenefitTable());
+
+        if (mCursor.getCount() != 0) {
+            ivInboxIcon.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
+            listRetirementBenefits(mCursor);
+            return;
+        }
+
+        ivInboxIcon.setVisibility(View.VISIBLE);
+        tvNoData.setVisibility(View.VISIBLE);
     }
 
     private void pickDateFor(TextInputLayout mTextInput) {
