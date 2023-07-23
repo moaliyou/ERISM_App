@@ -232,10 +232,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
                 employeeId = mCursor.getString(0);
             }
 
-            MyHelperClass.showToastMessage(
-                    view.getContext(),
-                    employeeId
-            );
         });
     }
 
@@ -253,10 +249,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
                 planId = mCursor.getString(0);
             }
 
-            MyHelperClass.showToastMessage(
-                    view.getContext(),
-                    planId
-            );
         });
     }
 
@@ -312,10 +304,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
             if (!isFieldEmpty()) {
                 insertNewRetirementBenefit();
-                MyHelperClass.showToastMessage(
-                        requireActivity(),
-                        "Successfully inserted | " + selectedBenefitType
-                );
                 dialog.dismiss();
             } else {
                 MyHelperClass.showToastMessage(
