@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.erismapp.helpers.EmployeeHelperClass;
+import com.example.erismapp.helpers.PayoutHelperClass;
 import com.example.erismapp.helpers.RetirementBenefitHelperClass;
 import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.helpers.UserHelperClass;
@@ -20,7 +21,6 @@ public class EmployeeRetirementDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "employee_retirement_db";
     private static final int DATABASE_VERSION = 1;
-    private final Context mContext;
 
     public EmployeeRetirementDatabase(@Nullable Context context) {
         super(
@@ -29,7 +29,6 @@ public class EmployeeRetirementDatabase extends SQLiteOpenHelper {
                 null,
                 DATABASE_VERSION
         );
-        this.mContext = context;
     }
 
     @Override
@@ -38,6 +37,7 @@ public class EmployeeRetirementDatabase extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(RetirementBenefitHelperClass.createRetirementBenefitTable());
         sqLiteDatabase.execSQL(UserHelperClass.createUserTable());
         sqLiteDatabase.execSQL(RetirementPlanHelperClass.createRetirementPlanTable());
+        sqLiteDatabase.execSQL(PayoutHelperClass.createPayoutTable());
     }
 
     @Override
@@ -45,6 +45,8 @@ public class EmployeeRetirementDatabase extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(EmployeeHelperClass.deleteEmployeeTable());
         sqLiteDatabase.execSQL(RetirementBenefitHelperClass.deleteRetirementBenefitTable());
         sqLiteDatabase.execSQL(RetirementPlanHelperClass.deleteRetirementPlanTable());
+        sqLiteDatabase.execSQL(PayoutHelperClass.deletePayoutTable());
+        sqLiteDatabase.execSQL(UserHelperClass.deleteUserTable());
         onCreate(sqLiteDatabase);
     }
 

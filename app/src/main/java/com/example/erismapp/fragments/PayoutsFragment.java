@@ -2,6 +2,7 @@ package com.example.erismapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +10,23 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.erismapp.R;
 import com.example.erismapp.adapters.PayoutAdapter;
-import com.example.erismapp.adapters.RetirementBenefitAdapter;
+import com.example.erismapp.database.EmployeeRetirementDatabase;
+import com.example.erismapp.helpers.EmployeeHelperClass;
+import com.example.erismapp.helpers.MyHelperClass;
+import com.example.erismapp.helpers.PayoutHelperClass;
+import com.example.erismapp.helpers.RetirementBenefitHelperClass;
+import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.PayoutModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -27,7 +36,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -43,24 +51,23 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
     private PayoutAdapter payoutAdapter;
     private ArrayList<PayoutModel> payoutList;
     private List<String> employeeNameList, benefitTypeList;
+    private SearchView searchViewPayout;
+    private TextView tvNoData;
+    private ImageView ivInboxIcon;
+    private EmployeeRetirementDatabase mEmployeeRetirementDatabase;
+    private ArrayAdapter<String> employeeNamesAdapter, benefitTypeAdapter;
+    private String employeeId, benefitTypeId;
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainView = inflater.inflate(R.layout.fragment_payouts, container, false);
 
-        payoutDataView();
+
         initViews();
-        eventHandling();
-
-        return mainView;
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void initViews() {
-        fabAddPayout = mainView.findViewById(R.id.fab_add_new_payout);
-        payoutRecyclerView = mainView.findViewById(R.id.rv_payout_list_view);
+        payoutDataView();
 
         payoutRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         payoutRecyclerView.setHasFixedSize(true);
@@ -69,62 +76,77 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         );
         payoutRecyclerView.setAdapter(payoutAdapter);
         payoutAdapter.notifyDataSetChanged();
+
+        eventHandling();
+
+        return mainView;
+    }
+
+    private void initViews() {
+        fabAddPayout = mainView.findViewById(R.id.fab_add_new_payout);
+        payoutRecyclerView = mainView.findViewById(R.id.rv_payout_list_view);
+        ivInboxIcon = mainView.findViewById(R.id.iv_inbox_icon);
+        searchViewPayout = mainView.findViewById(R.id.search_view_payout);
+        tvNoData = mainView.findViewById(R.id.tv_no_data);
+        mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
+
+        searchViewPayout.clearFocus();
     }
 
     private void payoutDataView() {
         payoutList = new ArrayList<>();
 
-        payoutList.add(
-                new PayoutModel(
-                        "Abdirahman Mohamed Ali",
-                        "Pension Payments",
-                        650,
-                        "12-12-2002"
-                )
-        );
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(
+                        PayoutHelperClass.displayDataPayoutTable()
+                );
 
-        payoutList.add(
-                new PayoutModel(
-                        "Ahmed Hajji Omar",
-                        "Life Insurance",
-                        70,
-                        "01-11-2024"
-                )
-        );
+        if (mCursor.getCount() != 0) {
+            ivInboxIcon.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
+            listPayouts(mCursor);
+            return;
+        }
 
-        payoutList.add(
-                new PayoutModel(
-                        "Kamal Hassan Jamal",
-                        "Social Security",
-                        90,
-                        "09-09-2030"
-                )
-        );
-
-        payoutList.add(
-                new PayoutModel(
-                        "Hassan Ali Hussein",
-                        "Health Insurance",
-                        290,
-                        "11-05-2025"
-                )
-        );
-
-        payoutList.add(
-                new PayoutModel(
-                        "Ahmed Mohamed Abdi",
-                        "Social Security",
-                        110,
-                        "15-08-2029"
-                )
-        );
+        ivInboxIcon.setVisibility(View.VISIBLE);
+        tvNoData.setVisibility(View.VISIBLE);
 
     }
 
-    private void setEmployeeNames() {
-        employeeNameList = Arrays.asList(getResources().getStringArray(R.array.employeeNames));
+    private void listPayouts(Cursor mCursor) {
+        while (mCursor.moveToNext()) {
+            String employeeName = "";
 
-        ArrayAdapter<String> employeeNamesAdapter =
+            Cursor employeeCursor = mEmployeeRetirementDatabase
+                    .readDataFrom(
+                            EmployeeHelperClass.getEmployeeName(mCursor.getString(1))
+                    );
+
+            if (employeeCursor.moveToFirst()) {
+                employeeName = employeeCursor.getString(0);
+            }
+
+            payoutList.add(
+                    new PayoutModel(
+                            Integer.parseInt(mCursor.getString(0)),
+                            employeeName,
+                            mCursor.getString(2),
+                            Double.parseDouble(mCursor.getString(3)),
+                            mCursor.getString(4)
+                    )
+            );
+        }
+    }
+
+    private void setEmployeeNames() {
+        employeeNameList = new ArrayList<>();
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(EmployeeHelperClass.displayEmployeeNames());
+
+        listEmployeeNames(mCursor);
+
+        employeeNamesAdapter =
                 new ArrayAdapter<>(
                         requireContext(),
                         R.layout.dropdown_items,
@@ -135,16 +157,93 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
     }
 
     private void setBenefitTypes() {
-        benefitTypeList = Arrays.asList(getResources().getStringArray(R.array.retirementPlans));
+        benefitTypeList = new ArrayList<>();
 
-        ArrayAdapter<String> retirementPlanAdapter =
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(RetirementBenefitHelperClass.displayBenefitTypes());
+
+        listBenefitTypes(mCursor);
+
+        benefitTypeAdapter =
                 new ArrayAdapter<>(
                         requireContext(),
                         R.layout.dropdown_items,
                         benefitTypeList
                 );
 
-        drdBenefitType.setAdapter(retirementPlanAdapter);
+        drdBenefitType.setAdapter(benefitTypeAdapter);
+    }
+
+    private void listEmployeeNames(Cursor mCursor) {
+        while (mCursor.moveToNext()) {
+            employeeNameList.add(mCursor.getString(0));
+        }
+    }
+
+    private void listBenefitTypes(Cursor mCursor) {
+        while (mCursor.moveToNext()) {
+            benefitTypeList.add(mCursor.getString(0));
+        }
+    }
+
+    private void findingSelectedEmployeeId() {
+        drdEmployeeNames.setOnItemClickListener((parent, view, position, id) -> {
+            String selectEmployee = parent.getItemAtPosition(position).toString();
+            employeeId = getSelectedEmployeeId(selectEmployee);
+
+        });
+    }
+
+    private void findingSelectedBenefitTypeId() {
+        drdBenefitType.setOnItemClickListener((parent, view, position, id) -> {
+            String selectBenefitType = parent.getItemAtPosition(position).toString();
+            benefitTypeId = "";
+
+            Cursor mCursor = mEmployeeRetirementDatabase
+                    .readDataFrom(
+                            RetirementBenefitHelperClass
+                                    .getBenefitId(selectBenefitType, employeeId)
+                    );
+
+            if (mCursor.moveToFirst()) {
+                benefitTypeId = mCursor.getString(0);
+            }
+
+            MyHelperClass.showToastMessage(requireContext(), benefitTypeId);
+
+        });
+    }
+
+    private String getSelectedEmployeeId(String selectEmployee) {
+
+        String selectedEmployeeId = "";
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(
+                        EmployeeHelperClass.getEmployeeId(selectEmployee)
+                );
+
+        if (mCursor.moveToFirst()) {
+            selectedEmployeeId = mCursor.getString(0);
+        }
+
+        return selectedEmployeeId;
+    }
+
+    private String getSelectedBenefitTypeId(String pSelectedPlan) {
+
+        String selectedPlan = "";
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(
+                        RetirementPlanHelperClass.getPlanId(pSelectedPlan)
+                );
+
+        if (mCursor.moveToFirst()) {
+            selectedPlan = mCursor.getString(0);
+        }
+
+        return selectedPlan;
     }
 
     private void eventHandling() {
@@ -153,6 +252,8 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
             createRegistrationDialog();
             setEmployeeNames();
             setBenefitTypes();
+            findingSelectedEmployeeId();
+            findingSelectedBenefitTypeId();
             pickDateFor(tfPayoutDate);
         });
 
