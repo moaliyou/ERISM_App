@@ -30,7 +30,6 @@ import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.RetirementBenefitHelperClass;
 import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
-import com.example.erismapp.models.EmployeeModel;
 import com.example.erismapp.models.RetirementBenefitModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -236,6 +235,22 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         }
 
         return selectedEmployeeId;
+    }
+
+    private String getSelectedPlanId(String pSelectedPlan) {
+
+        String selectedPlan = "";
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(
+                        RetirementPlanHelperClass.getPlanId(pSelectedPlan)
+                );
+
+        if (mCursor.moveToFirst()) {
+            selectedPlan = mCursor.getString(0);
+        }
+
+        return selectedPlan;
     }
 
     private void findingSelectedPlanId() {
@@ -460,13 +475,13 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
         selectedBenefitType = retirementBenefitList.get(position).getBenefitType();
         employeeId = getSelectedEmployeeId(retirementBenefitList.get(position).getEmployeeName());
-
-        Objects.requireNonNull(tfContributionAmount.getEditText())
-                .setText(String.valueOf(retirementBenefitList.get(position).getContributionAmount()));
-
+        planId = getSelectedPlanId(retirementBenefitList.get(position).getPlanName());
         selectedContributionFrequency = retirementBenefitList
                 .get(position)
                 .getContributionFrequency();
+
+        Objects.requireNonNull(tfContributionAmount.getEditText())
+                .setText(String.valueOf(retirementBenefitList.get(position).getContributionAmount()));
 
         Objects.requireNonNull(drdContributionFrequency)
                 .setText(selectedContributionFrequency);
@@ -479,6 +494,9 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
 
         Objects.requireNonNull(tfBenefitEndDate.getEditText())
                 .setText(retirementBenefitList.get(position).getBenefitEndDate());
+
+        pickDateFor(tfBenefitStartDate);
+        pickDateFor(tfBenefitEndDate);
     }
 
     private void createUpdateDialog(int position) {
@@ -552,13 +570,6 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
                         String.valueOf(retirementBenefitList.get(position).getRetirementBenefitId()),
                         dataList
                 );
-
-        new MaterialAlertDialogBuilder(requireActivity())
-                .setTitle("Data info")
-                .setMessage(dataList.toString())
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
-                .setCancelable(false)
-                .show();
 
         refreshRecyclerViewData();
     }
