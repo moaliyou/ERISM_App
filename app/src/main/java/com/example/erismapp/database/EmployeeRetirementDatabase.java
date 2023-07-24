@@ -113,7 +113,6 @@ public class EmployeeRetirementDatabase extends SQLiteOpenHelper {
             }
 
         } catch (Exception e) {
-            database.endTransaction();
             e.printStackTrace();
         } finally {
             database.endTransaction();

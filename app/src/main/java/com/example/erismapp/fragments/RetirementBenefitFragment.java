@@ -217,18 +217,25 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
     private void findingSelectedEmployeeId() {
         drdEmployeeNames.setOnItemClickListener((parent, view, position, id) -> {
             String selectEmployee = parent.getItemAtPosition(position).toString();
-            employeeId = "";
-
-            Cursor mCursor = mEmployeeRetirementDatabase
-                    .readDataFrom(
-                            EmployeeHelperClass.getEmployeeId(selectEmployee)
-                    );
-
-            if (mCursor.moveToFirst()) {
-                employeeId = mCursor.getString(0);
-            }
+            employeeId = getSelectedEmployeeId(selectEmployee);
 
         });
+    }
+
+    private String getSelectedEmployeeId(String selectEmployee) {
+
+        String selectedEmployeeId = "";
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(
+                        EmployeeHelperClass.getEmployeeId(selectEmployee)
+                );
+
+        if (mCursor.moveToFirst()) {
+            selectedEmployeeId = mCursor.getString(0);
+        }
+
+        return selectedEmployeeId;
     }
 
     private void findingSelectedPlanId() {
@@ -452,12 +459,17 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         }
 
         selectedBenefitType = retirementBenefitList.get(position).getBenefitType();
+        employeeId = getSelectedEmployeeId(retirementBenefitList.get(position).getEmployeeName());
 
         Objects.requireNonNull(tfContributionAmount.getEditText())
                 .setText(String.valueOf(retirementBenefitList.get(position).getContributionAmount()));
 
+        selectedContributionFrequency = retirementBenefitList
+                .get(position)
+                .getContributionFrequency();
+
         Objects.requireNonNull(drdContributionFrequency)
-                .setText(retirementBenefitList.get(position).getContributionFrequency());
+                .setText(selectedContributionFrequency);
 
         Objects.requireNonNull(drdRetirementPlans)
                 .setText(retirementBenefitList.get(position).getPlanName());
@@ -477,11 +489,16 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_retirement_benefit, null);
         initDialogViews(dialogView);
 
+        setUpdatableRetirementBenefitData(position);
+
         setEmployeeNames();
         setContributionFrequency();
         setRetirementPlans();
 
-//        setUpdatableRetirementBenefitData(position);
+        findingSelectedEmployeeId();
+        findingSelectedPlanId();
+        findingSelectedContributionFrequency();
+        findingSelectedBenefitType(dialogView);
 
         Button buttonCancel, buttonAction;
         buttonCancel = dialogView.findViewById(R.id.btn_cancel);
@@ -522,9 +539,9 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
         HashMap<String, String> dataList = new HashMap<>();
         dataList.put(RetirementBenefitHelperClass.COLUMN_EMPLOYEE_ID, employeeId);
         dataList.put(RetirementBenefitHelperClass.COLUMN_BENEFIT_TYPE, selectedBenefitType);
+        dataList.put(RetirementBenefitHelperClass.COLUMN_PLAN_ID, planId);
         dataList.put(RetirementBenefitHelperClass.COLUMN_CONTRIBUTION_AMOUNT, contributionAmount);
         dataList.put(RetirementBenefitHelperClass.COLUMN_CONTRIBUTION_FREQUENCY, selectedContributionFrequency);
-        dataList.put(RetirementBenefitHelperClass.COLUMN_PLAN_ID, planId);
         dataList.put(RetirementBenefitHelperClass.COLUMN_BENEFIT_START_DATE, benefitStartDate);
         dataList.put(RetirementBenefitHelperClass.COLUMN_BENEFIT_END_DATE, benefitEndDate);
 
@@ -532,9 +549,16 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
                 .updateData(
                         RetirementBenefitHelperClass.TABLE_NAME,
                         RetirementBenefitHelperClass.COLUMN_ID,
-                        String.valueOf(retirementBenefitList.get(position).getEmployeeId()),
+                        String.valueOf(retirementBenefitList.get(position).getRetirementBenefitId()),
                         dataList
                 );
+
+        new MaterialAlertDialogBuilder(requireActivity())
+                .setTitle("Data info")
+                .setMessage(dataList.toString())
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
+                .setCancelable(false)
+                .show();
 
         refreshRecyclerViewData();
     }
