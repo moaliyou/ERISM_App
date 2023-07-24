@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -583,9 +582,25 @@ public class RetirementBenefitFragment extends Fragment implements RecyclerViewI
                 )
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton("Delete", (dialogInterface, i) -> {
+
+                    mEmployeeRetirementDatabase.deleteById(
+                            RetirementBenefitHelperClass.TABLE_NAME,
+                            RetirementBenefitHelperClass.COLUMN_ID,
+                            String.valueOf(
+                                    retirementBenefitList
+                                            .get(position)
+                                            .getRetirementBenefitId()
+                            )
+                    );
+
                     retirementBenefitList.remove(position);
                     retirementBenefitAdapter.notifyItemRemoved(position);
-                    Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+
+                    if (retirementBenefitList.size() < 1) {
+                        ivInboxIcon.setVisibility(View.VISIBLE);
+                        tvNoData.setVisibility(View.VISIBLE);
+                    }
+
                     dialogInterface.dismiss();
                 })
                 .setCancelable(false)
