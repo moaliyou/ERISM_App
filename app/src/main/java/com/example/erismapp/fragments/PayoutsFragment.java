@@ -26,7 +26,6 @@ import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.PayoutHelperClass;
 import com.example.erismapp.helpers.RetirementBenefitHelperClass;
-import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.PayoutModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -37,6 +36,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -56,7 +56,7 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
     private ImageView ivInboxIcon;
     private EmployeeRetirementDatabase mEmployeeRetirementDatabase;
     private ArrayAdapter<String> employeeNamesAdapter, benefitTypeAdapter;
-    private String employeeId, benefitTypeId;
+    private String employeeId, benefitId;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -115,22 +115,28 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
 
     private void listPayouts(Cursor mCursor) {
         while (mCursor.moveToNext()) {
-            String employeeName = "";
+            String employeeName = "", benefitType = "";
 
             Cursor employeeCursor = mEmployeeRetirementDatabase
                     .readDataFrom(
                             EmployeeHelperClass.getEmployeeName(mCursor.getString(1))
                     );
 
-            if (employeeCursor.moveToFirst()) {
+            Cursor benefitCursor = mEmployeeRetirementDatabase
+                    .readDataFrom(
+                            RetirementBenefitHelperClass.getBenefitTypes(mCursor.getString(2))
+                    );
+
+            if (employeeCursor.moveToFirst() && benefitCursor.moveToFirst()) {
                 employeeName = employeeCursor.getString(0);
+                benefitType = benefitCursor.getString(0);
             }
 
             payoutList.add(
                     new PayoutModel(
                             Integer.parseInt(mCursor.getString(0)),
                             employeeName,
-                            mCursor.getString(2),
+                            benefitType,
                             Double.parseDouble(mCursor.getString(3)),
                             mCursor.getString(4)
                     )
@@ -156,11 +162,11 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         drdEmployeeNames.setAdapter(employeeNamesAdapter);
     }
 
-    private void setBenefitTypes() {
+    private void setBenefitTypes(String pEmployeeId) {
         benefitTypeList = new ArrayList<>();
 
         Cursor mCursor = mEmployeeRetirementDatabase
-                .readDataFrom(RetirementBenefitHelperClass.displayBenefitTypes());
+                .readDataFrom(RetirementBenefitHelperClass.displayBenefitTypesFor(pEmployeeId));
 
         listBenefitTypes(mCursor);
 
@@ -190,14 +196,14 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         drdEmployeeNames.setOnItemClickListener((parent, view, position, id) -> {
             String selectEmployee = parent.getItemAtPosition(position).toString();
             employeeId = getSelectedEmployeeId(selectEmployee);
-
+            setBenefitTypes(employeeId);
         });
     }
 
     private void findingSelectedBenefitTypeId() {
         drdBenefitType.setOnItemClickListener((parent, view, position, id) -> {
             String selectBenefitType = parent.getItemAtPosition(position).toString();
-            benefitTypeId = "";
+            benefitId = "";
 
             Cursor mCursor = mEmployeeRetirementDatabase
                     .readDataFrom(
@@ -206,10 +212,10 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
                     );
 
             if (mCursor.moveToFirst()) {
-                benefitTypeId = mCursor.getString(0);
+                benefitId = mCursor.getString(0);
             }
 
-            MyHelperClass.showToastMessage(requireContext(), benefitTypeId);
+            MyHelperClass.showToastMessage(requireContext(), benefitId);
 
         });
     }
@@ -236,7 +242,7 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
 
         Cursor mCursor = mEmployeeRetirementDatabase
                 .readDataFrom(
-                        RetirementPlanHelperClass.getPlanId(pSelectedPlan)
+                        RetirementBenefitHelperClass.getBenefitTypes(pSelectedPlan)
                 );
 
         if (mCursor.moveToFirst()) {
@@ -251,11 +257,44 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         fabAddPayout.setOnClickListener(view -> {
             createRegistrationDialog();
             setEmployeeNames();
-            setBenefitTypes();
             findingSelectedEmployeeId();
             findingSelectedBenefitTypeId();
             pickDateFor(tfPayoutDate);
         });
+
+    }
+
+    private void insertNewPayout() {
+        String amount = Objects.requireNonNull(tfPayoutAmount.getEditText())
+                .getText().toString().trim();
+        String payoutDate = Objects.requireNonNull(tfPayoutDate.getEditText())
+                .getText().toString().trim();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(PayoutHelperClass.COLUMN_EMPLOYEE_ID, employeeId);
+        dataList.put(PayoutHelperClass.COLUMN_BENEFIT_ID, benefitId);
+        dataList.put(PayoutHelperClass.COLUMN_AMOUNT, amount);
+        dataList.put(PayoutHelperClass.COLUMN_PAYOUT_DATE, payoutDate);
+
+        mEmployeeRetirementDatabase.insertData(PayoutHelperClass.TABLE_NAME, dataList);
+
+        refreshRecyclerViewData();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void refreshRecyclerViewData() {
+
+        payoutList.clear();
+
+        Cursor mCursor = mEmployeeRetirementDatabase
+                .readDataFrom(PayoutHelperClass.displayDataPayoutTable());
+
+        if (mCursor.getCount() != 0) {
+            ivInboxIcon.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
+            listPayouts(mCursor);
+            payoutAdapter.notifyDataSetChanged();
+        }
 
     }
 
@@ -279,8 +318,15 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         buttonCancel.setOnClickListener(view -> dialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            Toast.makeText(requireActivity(), "Saving data...", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+            if (!isFieldEmpty()) {
+                insertNewPayout();
+                dialog.dismiss();
+            } else {
+                MyHelperClass.showToastMessage(
+                        requireContext(),
+                        getResources().getString(R.string.warning_empty_fields_string)
+                );
+            }
         });
 
     }
@@ -324,10 +370,23 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
                 .setText(payoutList.get(position).getPayoutDate());
     }
 
+    private boolean isFieldEmpty() {
+        return (
+                Objects.requireNonNull(tfPayoutAmount.getEditText())
+                        .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfPayoutDate.getEditText())
+                                .getText().toString().equals(
+                                        getResources().getString(R.string.string_date_format)) ||
+                        drdEmployeeNames.getText().toString().trim().isEmpty() ||
+                        drdBenefitType.getText().toString().trim().isEmpty()
+        );
+    }
+
     private void createUpdateDialog(int position) {
         AlertDialog updateDialog;
         AlertDialog.Builder updateBuilder = new AlertDialog.Builder(requireActivity());
-        updateBuilder.setTitle("Update refinement benefit");
+        updateBuilder.setTitle("Update payout");
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_payout, null);
         initDialogViews(dialogView);
@@ -347,8 +406,15 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         buttonCancel.setOnClickListener(view -> updateDialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            Toast.makeText(requireActivity(), "Updating data...", Toast.LENGTH_SHORT).show();
-            updateDialog.dismiss();
+            if (!isFieldEmpty()) {
+
+                updateDialog.dismiss();
+            } else {
+                MyHelperClass.showToastMessage(
+                        requireContext(),
+                        getResources().getString(R.string.warning_empty_fields_string)
+                );
+            }
         });
 
 
