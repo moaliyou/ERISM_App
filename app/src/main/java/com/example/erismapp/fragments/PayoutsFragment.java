@@ -368,6 +368,8 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
 
         Objects.requireNonNull(tfPayoutDate.getEditText())
                 .setText(payoutList.get(position).getPayoutDate());
+
+        pickDateFor(tfPayoutDate);
     }
 
     private boolean isFieldEmpty() {
@@ -383,6 +385,29 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         );
     }
 
+    private void updatePayoutData(int position) {
+        String amount = Objects.requireNonNull(tfPayoutAmount.getEditText())
+                .getText().toString().trim();
+        String payoutDate = Objects.requireNonNull(tfPayoutDate.getEditText())
+                .getText().toString().trim();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(PayoutHelperClass.COLUMN_EMPLOYEE_ID, employeeId);
+        dataList.put(PayoutHelperClass.COLUMN_BENEFIT_ID, benefitId);
+        dataList.put(PayoutHelperClass.COLUMN_AMOUNT, amount);
+        dataList.put(PayoutHelperClass.COLUMN_PAYOUT_DATE, payoutDate);
+
+        mEmployeeRetirementDatabase
+                .updateData(
+                        PayoutHelperClass.TABLE_NAME,
+                        PayoutHelperClass.COLUMN_ID,
+                        String.valueOf(payoutList.get(position).getPayoutId()),
+                        dataList
+                );
+
+        refreshRecyclerViewData();
+    }
+
     private void createUpdateDialog(int position) {
         AlertDialog updateDialog;
         AlertDialog.Builder updateBuilder = new AlertDialog.Builder(requireActivity());
@@ -392,6 +417,11 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         initDialogViews(dialogView);
 
         setUpdatablePayoutData(position);
+
+        setEmployeeNames();
+
+        findingSelectedEmployeeId();
+        findingSelectedBenefitTypeId();
 
         Button buttonCancel, buttonAction;
         buttonCancel = dialogView.findViewById(R.id.btn_cancel);
@@ -407,7 +437,7 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
 
         buttonAction.setOnClickListener(view -> {
             if (!isFieldEmpty()) {
-
+                updatePayoutData(position);
                 updateDialog.dismiss();
             } else {
                 MyHelperClass.showToastMessage(
