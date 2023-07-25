@@ -459,9 +459,25 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
                 )
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton("Delete", (dialogInterface, i) -> {
+
+                    mEmployeeRetirementDatabase.deleteById(
+                            PayoutHelperClass.TABLE_NAME,
+                            PayoutHelperClass.COLUMN_ID,
+                            String.valueOf(
+                                    payoutList
+                                            .get(position)
+                                            .getPayoutId()
+                            )
+                    );
+
                     payoutList.remove(position);
                     payoutAdapter.notifyItemRemoved(position);
-                    Toast.makeText(requireActivity(), "Deleted", Toast.LENGTH_SHORT).show();
+
+                    if (payoutList.size() < 1) {
+                        ivInboxIcon.setVisibility(View.VISIBLE);
+                        tvNoData.setVisibility(View.VISIBLE);
+                    }
+
                     dialogInterface.dismiss();
                 })
                 .setCancelable(false)
