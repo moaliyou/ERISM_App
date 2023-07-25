@@ -1,8 +1,8 @@
 package com.example.erismapp.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.erismapp.R;
+import com.example.erismapp.database.EmployeeRetirementDatabase;
 import com.example.erismapp.databinding.ActivityDashboardBinding;
 import com.example.erismapp.fragments.EmployeeFragment;
 import com.example.erismapp.fragments.HomeFragment;
@@ -17,11 +18,13 @@ import com.example.erismapp.fragments.PayoutsFragment;
 import com.example.erismapp.fragments.RetirementBenefitFragment;
 import com.example.erismapp.fragments.RetirementPlanFragment;
 import com.example.erismapp.fragments.UserFragment;
+import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.google.android.material.appbar.MaterialToolbar;
 
 public class Dashboard extends AppCompatActivity {
 
     ActivityDashboardBinding dashboardBinding;
+    private MaterialToolbar mTopAppBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +32,19 @@ public class Dashboard extends AppCompatActivity {
         dashboardBinding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(dashboardBinding.getRoot());
 
+        initViews();
+
         replaceFragment(new HomeFragment());
 
         selectingNavigationItems();
 
-        MaterialToolbar mTopAppBar = findViewById(R.id.topAppBar);
+        setUserFullNameToTopAppBar();
 
-        Intent mIntent = getIntent();
+        eventHandling();
 
-        mTopAppBar.setTitle(mIntent.getStringExtra(LoginActivity.EXTRA_FULL_NAME));
+    }
 
+    private void eventHandling() {
         mTopAppBar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
 
@@ -49,7 +55,16 @@ public class Dashboard extends AppCompatActivity {
             return true;
 
         });
+    }
 
+    private void setUserFullNameToTopAppBar() {
+        Intent mIntent = getIntent();
+
+        mTopAppBar.setTitle(mIntent.getStringExtra(LoginActivity.EXTRA_FULL_NAME));
+    }
+
+    private void initViews() {
+        mTopAppBar = findViewById(R.id.topAppBar);
     }
 
     private void selectingNavigationItems() {
