@@ -215,8 +215,6 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
                 benefitId = mCursor.getString(0);
             }
 
-            MyHelperClass.showToastMessage(requireContext(), benefitId);
-
         });
     }
 

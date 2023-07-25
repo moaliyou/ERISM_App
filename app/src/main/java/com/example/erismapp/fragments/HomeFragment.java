@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.example.erismapp.R;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
 import com.example.erismapp.helpers.EmployeeHelperClass;
+import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.RetirementPlanHelperClass;
 
 public class HomeFragment extends Fragment {
@@ -68,7 +69,11 @@ public class HomeFragment extends Fragment {
 
         Cursor mCursor = mEmployeeRetirementDatabase.readDataFrom(query);
 
-        return mCursor.moveToFirst() ? Double.parseDouble(mCursor.getString(0)) : 0;
+        if (mCursor.moveToFirst() && mCursor.getString(0) != null) {
+            return Double.parseDouble(mCursor.getString(0));
+        }
+
+        return 0.0;
     }
 
     private Double getMinContribution() {
@@ -77,7 +82,11 @@ public class HomeFragment extends Fragment {
 
         Cursor mCursor = mEmployeeRetirementDatabase.readDataFrom(query);
 
-        return mCursor.moveToFirst() ? Double.parseDouble(mCursor.getString(0)) : 0;
+        if (mCursor.moveToFirst() && mCursor.getString(0) != null) {
+            return Double.parseDouble(mCursor.getString(0));
+        }
+
+        return 0.0;
     }
 
     private int getHighestVestingPeriod() {
@@ -86,7 +95,11 @@ public class HomeFragment extends Fragment {
 
         Cursor mCursor = mEmployeeRetirementDatabase.readDataFrom(query);
 
-        return mCursor.moveToFirst() ? Integer.parseInt(mCursor.getString(0)) : 0;
+        if (mCursor.moveToFirst() && mCursor.getString(0) != null) {
+            return Integer.parseInt(mCursor.getString(0));
+        }
+
+        return 0;
     }
 
 }
