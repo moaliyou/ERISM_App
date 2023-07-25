@@ -26,7 +26,6 @@ import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.PayoutHelperClass;
 import com.example.erismapp.helpers.RetirementBenefitHelperClass;
-import com.example.erismapp.helpers.RetirementPlanHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.PayoutModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -319,8 +318,15 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         buttonCancel.setOnClickListener(view -> dialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            insertNewPayout();
-            dialog.dismiss();
+            if (!isFieldEmpty()) {
+                insertNewPayout();
+                dialog.dismiss();
+            } else {
+                MyHelperClass.showToastMessage(
+                        requireContext(),
+                        getResources().getString(R.string.warning_empty_fields_string)
+                );
+            }
         });
 
     }
@@ -364,10 +370,23 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
                 .setText(payoutList.get(position).getPayoutDate());
     }
 
+    private boolean isFieldEmpty() {
+        return (
+                Objects.requireNonNull(tfPayoutAmount.getEditText())
+                        .getText().toString().trim().isEmpty() ||
+
+                        Objects.requireNonNull(tfPayoutDate.getEditText())
+                                .getText().toString().equals(
+                                        getResources().getString(R.string.string_date_format)) ||
+                        drdEmployeeNames.getText().toString().trim().isEmpty() ||
+                        drdBenefitType.getText().toString().trim().isEmpty()
+        );
+    }
+
     private void createUpdateDialog(int position) {
         AlertDialog updateDialog;
         AlertDialog.Builder updateBuilder = new AlertDialog.Builder(requireActivity());
-        updateBuilder.setTitle("Update refinement benefit");
+        updateBuilder.setTitle("Update payout");
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_payout, null);
         initDialogViews(dialogView);
@@ -387,8 +406,15 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
         buttonCancel.setOnClickListener(view -> updateDialog.dismiss());
 
         buttonAction.setOnClickListener(view -> {
-            Toast.makeText(requireActivity(), "Updating data...", Toast.LENGTH_SHORT).show();
-            updateDialog.dismiss();
+            if (!isFieldEmpty()) {
+
+                updateDialog.dismiss();
+            } else {
+                MyHelperClass.showToastMessage(
+                        requireContext(),
+                        getResources().getString(R.string.warning_empty_fields_string)
+                );
+            }
         });
 
 
