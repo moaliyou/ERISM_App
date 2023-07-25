@@ -43,7 +43,7 @@ public class RetirementPlanAdapter extends
         return new RetirementPlanViewHolder(view, mRecyclerViewInterface);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull RetirementPlanViewHolder holder, int position) {
 
@@ -58,8 +58,12 @@ public class RetirementPlanAdapter extends
                 retirementPlanModel.getEmployeeContributionRate() + "%"
         );
         holder.tvVestingPeriod.setText(retirementPlanModel.getVestingPeriod() + " years");
-        holder.tvMaxContributionLimit.setText("$" + retirementPlanModel.getMaxContributionLimit());
-        holder.tvMinContributionLimit.setText("$" + retirementPlanModel.getMinContributionLimit());
+        holder.tvMaxContributionLimit.setText(
+                String.format("$%,.1f", retirementPlanModel.getMaxContributionLimit())
+        );
+        holder.tvMinContributionLimit.setText(
+                String.format("$%,.1f", retirementPlanModel.getMinContributionLimit())
+        );
 
     }
 

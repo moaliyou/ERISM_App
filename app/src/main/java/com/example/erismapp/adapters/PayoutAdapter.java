@@ -43,7 +43,7 @@ public class PayoutAdapter extends
         return new PayoutViewHolder(view, mRecyclerViewInterface);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull PayoutViewHolder holder, int position) {
 
@@ -51,8 +51,8 @@ public class PayoutAdapter extends
 
         holder.tvEmployeeName.setText(payoutModel.getEmployeeName());
         holder.tvBenefitType.setText(payoutModel.getBenefitType());
-        holder.tvPayoutAmount.setText("$" +
-                payoutModel.getPayoutAmount()
+        holder.tvPayoutAmount.setText(
+                String.format("$%,.1f", payoutModel.getPayoutAmount())
         );
         holder.tvPayoutDate.setText(payoutModel.getPayoutDate());
 

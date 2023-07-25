@@ -43,7 +43,7 @@ public class RetirementBenefitAdapter extends
         return new RetirementBenefitViewHolder(view, mRecyclerViewInterface);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull RetirementBenefitViewHolder holder, int position) {
 
@@ -52,8 +52,8 @@ public class RetirementBenefitAdapter extends
         holder.tvEmployeeName.setText(retirementBenefitModel.getEmployeeName());
         holder.tvBenefitType.setText(retirementBenefitModel.getBenefitType());
         holder.tvRetirementPlan.setText(retirementBenefitModel.getPlanName());
-        holder.tvContributionAmount.setText("$" +
-                retirementBenefitModel.getContributionAmount()
+        holder.tvContributionAmount.setText(
+                String.format("$%,.1f", retirementBenefitModel.getContributionAmount())
         );
         holder.tvContributionFrequency.setText(retirementBenefitModel.getContributionFrequency());
         holder.tvBenefitStartDate.setText(retirementBenefitModel.getBenefitStartDate());

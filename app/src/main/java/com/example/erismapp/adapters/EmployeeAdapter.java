@@ -39,7 +39,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         return new EmployeeViewHolder(view, mRecyclerViewInterface);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull EmployeeViewHolder holder, int position) {
 
@@ -59,8 +59,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         );
 
         holder.tvSalary.setText(
-                mContext.getResources().getString(R.string.string_tv_salary) +
-                        employee.getSalary()
+                String.format("Salary: $%,.1f", employee.getSalary())
         );
 
         holder.tvHireDate.setText(
