@@ -40,6 +40,16 @@ public class RetirementBenefitHelperClass {
         return "SELECT DISTINCT " + COLUMN_BENEFIT_TYPE + " FROM " + TABLE_NAME;
     }
 
+    public static String displayBenefitTypesFor(String employeeId) {
+        return "SELECT " + COLUMN_BENEFIT_TYPE + " FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_EMPLOYEE_ID + " = " + employeeId;
+    }
+
+    public static String getBenefitTypes(String benefitId) {
+        return "SELECT " + COLUMN_BENEFIT_TYPE + " FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_ID + " = " + benefitId;
+    }
+
     public static String getBenefitId(String benefitType, String employeeId) {
         return "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME +
                 " WHERE " + COLUMN_BENEFIT_TYPE + " = '" + benefitType + "' AND " +
