@@ -28,6 +28,7 @@ import com.example.erismapp.helpers.PayoutHelperClass;
 import com.example.erismapp.helpers.RetirementBenefitHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.PayoutModel;
+import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,6 +36,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -339,9 +341,13 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
     private void pickDateFor(TextInputLayout mTextInput) {
         Objects.requireNonNull(mTextInput.getEditText()).setOnClickListener(v -> {
 
+            CalendarConstraints.Builder constraintsBuilder =
+                    new CalendarConstraints.Builder()
+                            .setEnd(Calendar.getInstance().getTimeInMillis());
+
             MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                     .setTitleText("Select Date")
-                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .setCalendarConstraints(constraintsBuilder.build())
                     .build();
 
             datePicker.addOnPositiveButtonClickListener(selection -> {

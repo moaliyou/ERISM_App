@@ -3,6 +3,7 @@ package com.example.erismapp.fragments;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,17 +27,25 @@ import com.example.erismapp.helpers.EmployeeHelperClass;
 import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
 import com.example.erismapp.models.EmployeeModel;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class EmployeeFragment extends Fragment implements RecyclerViewInterface {
 
@@ -254,11 +264,15 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
     }
 
     private void pickDateFor(TextInputLayout mTextInput) {
-        Objects.requireNonNull(mTextInput.getEditText()).setOnClickListener(v -> {
+        Objects.requireNonNull(mTextInput.getEditText()).setOnClickListener(v -> {;
+
+            CalendarConstraints.Builder constraintsBuilder =
+                    new CalendarConstraints.Builder()
+                            .setEnd(Calendar.getInstance().getTimeInMillis());
 
             MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                     .setTitleText("Select Date")
-                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .setCalendarConstraints(constraintsBuilder.build())
                     .build();
 
             datePicker.addOnPositiveButtonClickListener(selection -> {
