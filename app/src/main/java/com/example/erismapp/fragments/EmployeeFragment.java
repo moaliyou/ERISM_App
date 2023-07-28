@@ -161,7 +161,10 @@ public class EmployeeFragment extends Fragment implements RecyclerViewInterface 
         for (EmployeeModel employee :
                 employeeArrayList) {
 
-            if (employee.getFullName().toLowerCase().contains(text.toLowerCase()))
+            if (
+                    employee.getFullName().toLowerCase().contains(text.toLowerCase()) ||
+                    String.valueOf(employee.getEmployeeId()).contains(text.toLowerCase())
+            )
                 filteredEmployeeList.add(employee);
 
         }
