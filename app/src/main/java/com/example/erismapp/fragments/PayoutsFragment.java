@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.PayoutHelperClass;
 import com.example.erismapp.helpers.RetirementBenefitHelperClass;
 import com.example.erismapp.interfaces.RecyclerViewInterface;
+import com.example.erismapp.models.EmployeeModel;
 import com.example.erismapp.models.PayoutModel;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -112,6 +114,24 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
 
         ivInboxIcon.setVisibility(View.VISIBLE);
         tvNoData.setVisibility(View.VISIBLE);
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void filterPayoutList(String text) {
+        ArrayList<PayoutModel> filteredPayoutList = new ArrayList<>();
+        for (PayoutModel payout :
+                payoutList) {
+
+            if (
+                    payout.getEmployeeName().toLowerCase().contains(text.toLowerCase()) ||
+                            String.valueOf(payout.getPayoutDate()).contains(text.toLowerCase())
+            )
+                filteredPayoutList.add(payout);
+
+        }
+
+        payoutAdapter.setFilteredList(filteredPayoutList);
 
     }
 
@@ -260,6 +280,34 @@ public class PayoutsFragment extends Fragment implements RecyclerViewInterface {
             findingSelectedEmployeeId();
             findingSelectedBenefitTypeId();
             pickDateFor(tfPayoutDate);
+        });
+
+        searchViewPayout.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterPayoutList(newText);
+                return true;
+            }
+        });
+
+        payoutRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (!(dy > 0)) {
+                    fabAddPayout.show();
+                    return;
+                }
+
+                fabAddPayout.hide();
+
+            }
         });
 
     }
