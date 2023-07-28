@@ -135,5 +135,18 @@
             app:layout_constraintTop_toBottomOf="@id/tf_confirm_password"
             />
 
+        <Button
+            android:id="@+id/btn_log_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:text="Log out"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_save_changes"
+            app:layout_constraintEnd_toStartOf="@+id/btn_save_changes"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tf_confirm_password"
+            app:layout_constraintTop_toTopOf="@+id/btn_save_changes"
+            app:layout_constraintVertical_bias="0.0" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

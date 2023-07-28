@@ -1,6 +1,7 @@
 package com.example.erismapp.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.erismapp.R;
 import com.example.erismapp.activities.Dashboard;
+import com.example.erismapp.activities.LoginActivity;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
 import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.UserHelperClass;
@@ -28,7 +30,7 @@ public class UserFragment extends Fragment {
     private MaterialToolbar toolbar;
     private TextInputLayout tfUserFullName, tfUsername,
             tfNewPassword, tfConfirm;
-    private Button btnSaveChanges;
+    private Button btnSaveChanges, btnLogout;
     private EmployeeRetirementDatabase mEmployeeRetirementDatabase;
     private UserModel userModel;
 
@@ -69,6 +71,7 @@ public class UserFragment extends Fragment {
                     );
                 } else {
                     saveUserChanges();
+                    clearFields();
                 }
             } else {
                 MyHelperClass.showToastMessage(
@@ -78,6 +81,17 @@ public class UserFragment extends Fragment {
             }
 
         });
+
+        btnLogout.setOnClickListener(view -> {
+            Intent mIntent = new Intent(requireActivity(), LoginActivity.class);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(mIntent);
+        });
+    }
+
+    private void clearFields() {
+        Objects.requireNonNull(tfNewPassword.getEditText()).setText("");
+        Objects.requireNonNull(tfConfirm.getEditText()).setText("");
     }
 
     private void saveUserChanges() {
@@ -122,6 +136,7 @@ public class UserFragment extends Fragment {
         tfNewPassword = mainView.findViewById(R.id.tf_new_password);
         tfConfirm = mainView.findViewById(R.id.tf_confirm_password);
         btnSaveChanges = mainView.findViewById(R.id.btn_save_changes);
+        btnLogout = mainView.findViewById(R.id.btn_log_out);
         mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(requireActivity());
         userModel = new UserModel();
 
