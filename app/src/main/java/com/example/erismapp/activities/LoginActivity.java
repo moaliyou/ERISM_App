@@ -10,10 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.erismapp.R;
 import com.example.erismapp.database.EmployeeRetirementDatabase;
+import com.example.erismapp.helpers.EmployeeHelperClass;
+import com.example.erismapp.helpers.MyHelperClass;
 import com.example.erismapp.helpers.UserHelperClass;
 import com.example.erismapp.models.UserModel;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
@@ -37,7 +40,21 @@ public class LoginActivity extends AppCompatActivity {
         tfUsername = findViewById(R.id.tf_username_layout);
         tfPassword = findViewById(R.id.tf_password_layout);
         mEmployeeRetirementDatabase = new EmployeeRetirementDatabase(this);
-        defaultUser = new UserModel();
+        defaultUser = new UserModel("System admin", "admin", "admin123");
+        createDefaultUser();
+    }
+
+    private void createDefaultUser() {
+        String fullName = defaultUser.getFullName();
+        String username = defaultUser.getUsername();
+        String password = defaultUser.getPassword();
+
+        HashMap<String, String> dataList = new HashMap<>();
+        dataList.put(UserHelperClass.COLUMN_USERNAME, username);
+        dataList.put(UserHelperClass.COLUMN_FULL_NAME, fullName);
+        dataList.put(UserHelperClass.COLUMN_PASSWORD, password);
+
+        mEmployeeRetirementDatabase.insertData(UserHelperClass.TABLE_NAME, dataList);
     }
 
     public void signup(View view) {
@@ -60,7 +77,10 @@ public class LoginActivity extends AppCompatActivity {
         if (!isFieldEmpty()) {
             checkUser();
         } else {
-            Toast.makeText(this, "Fadlan buuxi meelaha banaan", Toast.LENGTH_SHORT).show();
+            MyHelperClass.showToastMessage(
+                    this,
+                    getResources().getString(R.string.warning_empty_fields_string)
+            );
         }
     }
 

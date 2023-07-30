@@ -36,4 +36,9 @@ public class UserHelperClass {
                 " WHERE " + COLUMN_FULL_NAME + " = '" + fullName + "';";
     }
 
+    public static String getUserPassword(String username) {
+        return "SELECT " + COLUMN_PASSWORD + " FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_USERNAME + " = '" + username + "';";
+    }
+
 }
