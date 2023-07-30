@@ -13,7 +13,14 @@ public class UserModel {
         this.fullName = fullName;
     }
 
-    public UserModel(){}
+    public UserModel(String fullName, String username, String password){
+        this.username = username;
+        this.fullName = fullName;
+        this.password = password;
+    }
+
+    public UserModel() {
+    }
 
     public void setUserId(int userId) {
         this.userId = userId;
